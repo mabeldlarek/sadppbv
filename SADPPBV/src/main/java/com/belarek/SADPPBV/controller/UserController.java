@@ -18,7 +18,6 @@ public class UserController {
     private UserService personService;
     @Autowired
     public UserController(UserService personService) {
-
         this.personService = personService;
         this.response = new ResponseDTO();
     }
@@ -37,6 +36,20 @@ public class UserController {
     @PostMapping("usuarios")
     public ResponseEntity<ResponseDTO> createPerson(@RequestBody @Valid UserDTO personDTO) {
         personService.createPerson(personDTO);
+        response.setMessage("Usuário criado com sucesso");
+        response.setSucess(true);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @PostMapping("teste")
+    public ResponseEntity<ResponseDTO> criar() {
+        UserDTO u = new UserDTO();
+        u.setEmail("maria@hotmail");
+        u.setNome("maria");
+        u.setSenha("123456");
+        u.setTipo_usuario(1);
+        u.setRegistro(12345);
+        personService.createPerson(u);
         response.setMessage("Usuário criado com sucesso");
         response.setSucess(true);
         return ResponseEntity.ok().body(response);

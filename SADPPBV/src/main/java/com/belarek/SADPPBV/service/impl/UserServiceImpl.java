@@ -4,15 +4,18 @@ import com.belarek.SADPPBV.dto.UserDTO;
 import com.belarek.SADPPBV.entity.User;
 import com.belarek.SADPPBV.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.belarek.SADPPBV.repository.UserRepository;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
 
     private UserRepository personRepository;
     @Autowired
@@ -21,22 +24,23 @@ public class UserServiceImpl implements UserService {
     }
 
     public UserDTO findByEmail(String email){
-        Optional<UserDTO> person = personRepository.findByEmail(email);
-        return person.get();
+        User person = (User) personRepository.findByEmail(email);
+        return mapToDTO(person);
     }
 
     @Override
     public UserDTO findByRegister(int registro) {
-        Optional<UserDTO> person = personRepository.findByRegistro(registro);
-        return person.get();
+        User person = (User)personRepository.findByRegistro(registro);
+        return mapToDTO(person);
     }
 
     @Override
     public String createPerson(UserDTO personDTO) {
         User person = new User();
+        String senhaEncriptografada = new BCryptPasswordEncoder().encode(personDTO.getSenha());
         person.setNome(personDTO.getNome());
         person.setEmail(personDTO.getEmail());
-        person.setSenha(personDTO.getSenha());
+        person.setSenha(senhaEncriptografada);
         person.setRegistro(personDTO.getRegistro());
         person.setTipo_usuario(personDTO.getTipo_usuario());
         personRepository.save(person);
@@ -98,5 +102,10 @@ public class UserServiceImpl implements UserService {
         person.setRegistro(personDTO.getRegistro());
         person.setTipo_usuario(personDTO.getTipo_usuario());
         return person;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        return personRepository.findByEmail(email);
     }
 }
