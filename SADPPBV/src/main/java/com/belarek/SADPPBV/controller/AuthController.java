@@ -13,6 +13,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,6 +40,10 @@ public class AuthController {
         this.userService = userService;
         this.authorizationService = authorizationService;
         this.loginResponseDTO = new LoginResponseDTO();
+    }
+    @GetMapping("/")
+    public void teste(){
+
     }
 
     @PostMapping("/login")
