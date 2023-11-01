@@ -16,7 +16,7 @@ public class UserDTO {
     @NotBlank(message = "Invalid email: Empty Email")
     @NotNull(message = "Invalid email: Email is NULL")
     private String email;
-    @Min(value = 1, message = "Registro deve ser informado")
+    @Min(value = 0, message = "Registro deve ser informado")
     private int registro;
     @Min(value = 1, message = "Tipo de usuário deve ser informado")
     private int tipo_usuario;

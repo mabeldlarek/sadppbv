@@ -49,7 +49,7 @@ public class AuthServiceImpl implements AuthService {
         AuthTokenDTO authTokenDTO = new AuthTokenDTO(token,user.getId(),true);
         authTokenService.createToken(mapToEntity(authTokenDTO));
 
-        return new LoginResponseDTO(token, new ResponseDTO("Login realizado com sucesso", true));
+        return new LoginResponseDTO(token, "Login realizado com sucesso", true);
     }
 
     @Override

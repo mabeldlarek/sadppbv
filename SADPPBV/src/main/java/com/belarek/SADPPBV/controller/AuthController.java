@@ -2,6 +2,7 @@ package com.belarek.SADPPBV.controller;
 
 import com.belarek.SADPPBV.dto.LoginRequestDTO;
 import com.belarek.SADPPBV.dto.LoginResponseDTO;
+import com.belarek.SADPPBV.dto.ResponseDTO;
 import com.belarek.SADPPBV.security.TokenService;
 import com.belarek.SADPPBV.service.AuthService;
 import com.belarek.SADPPBV.service.UserService;
@@ -13,16 +14,14 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Controller
 @RestController
+@CrossOrigin(origins = "*")
 public class AuthController {
     private LoginResponseDTO loginResponseDTO;
     private AuthService authorizationService;
@@ -41,17 +40,13 @@ public class AuthController {
         this.authorizationService = authorizationService;
         this.loginResponseDTO = new LoginResponseDTO();
     }
-    @GetMapping("/")
-    public void teste(){
-
-    }
 
     @PostMapping("/login")
     public ResponseEntity<Object> login(@RequestBody @Valid LoginRequestDTO loginRequestDTO){
         authenticationManager = context.getBean(AuthenticationManager.class);
         LoginResponseDTO respostaLogin = authorizationService.login(loginRequestDTO);
         if(respostaLogin.getToken().isEmpty())
-            return ResponseEntity.ok().body(respostaLogin.getResponseDTO());
+            return ResponseEntity.ok().body(respostaLogin);
 
         return ResponseEntity.ok().body(respostaLogin);
     }
@@ -62,9 +57,9 @@ public class AuthController {
         if (token != null) {
             authorizationService.logout(token);
         } else {
-            return ResponseEntity.badRequest().body("Nenhum token JWT encontrado na solicitação");
+            return ResponseEntity.badRequest().body(new ResponseDTO("Nenhum token encontrado", false));
         }
-        return ResponseEntity.ok().body("Login realizado com sucesso");
+        return ResponseEntity.ok().body(new ResponseDTO("Logout reaizado com sucesso", true));
     }
 
     private String extractTokenFromRequest(HttpServletRequest request) {

@@ -4,6 +4,7 @@ import com.belarek.SADPPBV.dto.UserDTO;
 import com.belarek.SADPPBV.dto.ResponseDTO;
 import com.belarek.SADPPBV.service.UserService;
 import jakarta.validation.Valid;
+import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -38,7 +39,7 @@ public class UserController {
         personService.createPerson(personDTO);
         response.setMessage("Usuário criado com sucesso");
         response.setSucess(true);
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("teste")
