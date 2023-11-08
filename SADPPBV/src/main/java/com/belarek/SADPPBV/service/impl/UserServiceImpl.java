@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public UserDTO findByRegister(int registro) {
-        User person = (User)personRepository.findByRegistro(registro);
+        User person = (User) personRepository.findByRegistro(registro);
         return mapToDTO(person);
     }
 
@@ -75,6 +75,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public String deletePerson(Long id) {
         User personDeleted = personRepository.findById(id).get();
         personRepository.delete(personDeleted);
+        return null;
+    }
+
+    @Override
+    public String deletePersonByRegistro(int registro) {
+        personRepository.deleteByRegistro(registro);
         return null;
     }
 

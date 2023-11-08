@@ -19,7 +19,7 @@ public class TokenService {
 
     public String generateToken(User userModel){
         try {
-            Algorithm algorithm = Algorithm.HMAC256(secret);
+            Algorithm algorithm = Algorithm.HMAC256(secret); //verifica autenticidade do token
 
             String token = JWT.create()
                 .withIssuer("auth")

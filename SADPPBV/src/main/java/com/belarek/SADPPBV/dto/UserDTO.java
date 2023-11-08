@@ -18,6 +18,6 @@ public class UserDTO {
     private String email;
     @Min(value = 0, message = "Registro deve ser informado")
     private int registro;
-    @Min(value = 1, message = "Tipo de usuário deve ser informado")
+    @Min(value = 0, message = "Tipo de usuário deve ser informado")
     private int tipo_usuario;
 }

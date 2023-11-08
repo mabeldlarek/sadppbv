@@ -8,6 +8,7 @@ import com.belarek.SADPPBV.service.AuthService;
 import com.belarek.SADPPBV.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -33,7 +34,6 @@ public class AuthController {
     private ApplicationContext context;
     private Set<String> tokenBlacklist = new HashSet<>();
 
-
     @Autowired
     public AuthController(AuthService authorizationService, UserService userService) {
         this.userService = userService;
@@ -42,25 +42,32 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Object> login(@RequestBody @Valid LoginRequestDTO loginRequestDTO){
-        authenticationManager = context.getBean(AuthenticationManager.class);
-        LoginResponseDTO respostaLogin = authorizationService.login(loginRequestDTO);
-        if(respostaLogin.getToken().isEmpty())
-            return ResponseEntity.ok().body(respostaLogin);
-
-        return ResponseEntity.ok().body(respostaLogin);
-    }
-
-    @PostMapping("/logout2")
-    public ResponseEntity<Object> eta(HttpServletRequest request){
-        String token = extractTokenFromRequest(request);
-        if (token != null) {
-            authorizationService.logout(token);
-        } else {
-            return ResponseEntity.badRequest().body(new ResponseDTO("Nenhum token encontrado", false));
+    public ResponseEntity<Object> login( @RequestBody @Valid LoginRequestDTO loginRequestDTO){
+        try {
+            authenticationManager = context.getBean(AuthenticationManager.class);
+            Object respostaLogin = authorizationService.login(loginRequestDTO);
+            if (respostaLogin instanceof ResponseDTO)
+                return ResponseEntity.status(401).body(respostaLogin);
+            else
+                return ResponseEntity.ok().body(respostaLogin);
+        } catch (ConstraintViolationException e){
+            return ResponseEntity.badRequest().body(new ResponseDTO("Erro:" + e, false));
         }
-        return ResponseEntity.ok().body(new ResponseDTO("Logout reaizado com sucesso", true));
     }
+
+   @PostMapping("/logout")
+    public ResponseEntity<Object> logout(HttpServletRequest request){
+        String token = extractTokenFromRequest(request);
+        ResponseDTO response = null;
+        if (token != null) {
+            response = authorizationService.logout(token);
+        }
+
+        if(response!= null && response.isSucess())
+            return ResponseEntity.ok().body(response);
+        else
+            return ResponseEntity.status(401).body(response);
+   }
 
     private String extractTokenFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");

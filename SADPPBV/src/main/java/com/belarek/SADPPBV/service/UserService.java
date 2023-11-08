@@ -11,5 +11,6 @@ public interface UserService {
     UserDTO findById(Long id);
     String updatePerson(UserDTO person, Long id);
     String deletePerson(Long id);
+    String deletePersonByRegistro(int registro);
     List<UserDTO> listPersons();
 }
