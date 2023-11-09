@@ -70,7 +70,7 @@ public class AuthServiceImpl implements AuthService {
     private String autenticarUsuario(User user, String senha){
         String token = "";
         try {
-            var usernamePassword = new UsernamePasswordAuthenticationToken(user.getUsername(), senha);
+            var usernamePassword = new UsernamePasswordAuthenticationToken(user.getUsername(), senha, user.getAuthorities());
             var auth = this.authenticationManager.authenticate(usernamePassword);
             token = tokenService.generateToken((User) auth.getPrincipal());
             criarToken(token, user.getId());

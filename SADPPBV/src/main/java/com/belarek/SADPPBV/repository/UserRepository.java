@@ -9,6 +9,8 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
     UserDetails findByEmail(String email);
-    UserDetails findByRegistro(int register);
-    UserDetails deleteByRegistro(int register);
+
+    User findByRegistro(int registro);
+    void deleteByRegistro(int registro);
+
 }

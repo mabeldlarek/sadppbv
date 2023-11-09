@@ -5,6 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.belarek.SADPPBV.entity.User;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,11 @@ public class TokenService {
 
     private String secret = "secret";
 
+    public String recoverToken(HttpServletRequest request){
+        var authHeader = request.getHeader("Authorization");
+        if (authHeader == null) return null;
+        return authHeader.replace("Bearer ", "");
+    }
     public String generateToken(User userModel){
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret); //verifica autenticidade do token
