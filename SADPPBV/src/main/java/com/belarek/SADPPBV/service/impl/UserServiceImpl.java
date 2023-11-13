@@ -31,7 +31,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     public UserDTO findByEmail(String email){
         User person = (User) userRepository.findByEmail(email);
-        return mapToDTO(person);
+        if(person != null){
+            return mapToDTO(person);
+        }
+        return null;
     }
 
     @Override
@@ -45,9 +48,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public String createPerson(UserDTO personDTO) {
-        UserDetails user = userRepository.findByRegistro(personDTO.getRegistro());
+        UserDTO user = findByRegister(personDTO.getRegistro());
         if(user == null) {
-            UserDTO u = findByEmail(user.getUsername());
+            UserDTO u = findByEmail(personDTO.getEmail());
             if(u!=null){
                 return "Email já existe";
             }
@@ -86,6 +89,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             user.setNome(personDTO.getNome());
             user.setEmail(personDTO.getEmail());
             user.setSenha(personDTO.getSenha());
+            user.setRegistro(user.getRegistro());
+            user.setTipo_usuario(user.getTipo_usuario());
             userRepository.save(user);
 
             return "sucesso";

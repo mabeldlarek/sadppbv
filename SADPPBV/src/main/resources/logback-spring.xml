@@ -1,8 +1,0 @@
-<configuration>
-    <!-- ... outras configurações ... -->
-
-    <!-- Defina o nível de log para o pacote do controlador de login para DEBUG -->
-    <logger name="com.belarek.SADPPBV.controller" level="DEBUG" />
-
-    <!-- ... outras configurações ... -->
-</configuration>

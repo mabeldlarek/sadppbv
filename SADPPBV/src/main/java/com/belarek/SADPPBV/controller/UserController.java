@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "*")
 @Controller
+@CrossOrigin(origins = "*")
 public class UserController {
     private UserService personService;
     private TokenService tokenService;
@@ -104,6 +104,7 @@ public class UserController {
                     if (resultado.equals("sucesso")) {
                         response.setMessage("Alteração no cadastrado realizada com sucesso.");
                         response.setSucess(true);
+                        return ResponseEntity.ok().body(response);
                     } else {
                         response.setMessage("Falha ao realizar alteração :" + resultado);
                         response.setSucess(false);
