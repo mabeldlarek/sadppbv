@@ -1,8 +1,9 @@
 import Logo from '../../resources/img/logo.png'
 import React, { useState, useEffect } from 'react';
 import { Outlet, Link } from "react-router-dom";
+import NavigationLogged from './NavigationLogged';
 
-function Navigation() {
+function Navigation(token) {
 
   const [valoresDefinidos, setValoresDefinidos] = useState(false);
 
@@ -30,7 +31,7 @@ function Navigation() {
     <nav className="navbar navbar-expand-lg custom-navbar">
     <div className="container-fluid">
     <a className="navbar-brand" href="#">
-      <img src={Logo} alt="" width="200" height="100" class="d-inline-block align-text-top"/>
+      <img src={Logo} alt="" width="200" height="100" className="d-inline-block align-text-top"/>
     </a>
         <a className="navbar-brand" href="#"></a>
         <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,7 +40,6 @@ function Navigation() {
         <div className="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
           <div className="navbar-nav">
           <Link to="/login" className={`nav-link custom-link ${!valoresDefinidos && 'disabled'}`}>Login</Link> 
-          <Link to="/formulario" className={`nav-link custom-link ${!valoresDefinidos && 'disabled'}`}>Cadastro</Link>
           </div>
         </div>
     </div>

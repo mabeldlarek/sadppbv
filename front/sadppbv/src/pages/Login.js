@@ -1,95 +1,101 @@
 import React, { useState } from 'react';
-import md5 from 'md5'; 
+import { useNavigate } from 'react-router-dom';
+import Navigation from '../components/nav/Navigation';
+import MD5 from "crypto-js/md5";
+
 
 function Login() {
+    const navigate = useNavigate();
 
     const login = {
         senha: '',
         registro: '',
     }
 
-    const [registro, setRegistro] = useState('');
-    const [senha, setSenha] = useState('');
-    const [mensagem, setMensagem] = useState('');
     const [objLogin, setObjeLogin] = useState(login);
+    const [mensagem, setMensagem] = useState('');
+    const ip = localStorage.getItem('ip');
+    const porta = localStorage.getItem('porta');
+    const corpo = JSON.stringify(objLogin);
 
-    const handleRegistroChange = (e) => {
-        setRegistro(e.target.value);
-    };
-    
-    const handleSenhaChange = (e) => {
-        const senhaCriptografada = md5(e.target.value);
-        setSenha(senhaCriptografada);
+    const headers = {
+        'Content-type': 'application/json',
+        'Accept': 'application/json'
     };
 
-    const realizarLogin = () => {
-        const novoLogin = {
-            registro: registro,
-            senha: senha,
-        };
-        
-        setObjeLogin(novoLogin);
-        
-        fetch("http://" + localStorage.getItem('ip') + ":" + localStorage.getItem('porta') + "/login", {
-            method: 'post',
-            body: JSON.stringify(objLogin),
-            headers: {
-                'Content-type': 'application/json',
-                'Accept': 'application/json'
-            }
-        })
-        .then((response) => {
-            if (!response.ok) {
-              return response.json();
-            }
-            return response.json();
-          })
-          .then((data) => {
-            if (data.success === false) {
-              const mensagemDeErro = data.message;
-              setMensagem(mensagemDeErro);
-              console.error('Mensagem de erro:', mensagemDeErro);
-            } else {
-              const token = data.token;
-              console.log('Token:', token);
-            }})
-            .catch((error) => {
-                console.error('Erro ao realizar o login:', error);
-            });
+    const capturarValor = (e) => {
+        setObjeLogin({ ...objLogin, [e.target.name]: e.target.value });
     }
 
-return (
-    <section className="ftco-section">
-        <div className="container">
-            <div className="row justify-content-center">
-                <form>
-                    <h1 className="mb-4 fw-normal">Faça seu login no SADBBPV</h1>
+    const realizarLogin = async () => {
+        console.log('ENVIADO: ', headers, ' ', corpo);
 
-                    <div className="form-floating">
-                        <input type="text" value={registro} onChange={handleRegistroChange} className="form-control" name="registro" id="registro" aria-label="Small" aria-describedby="inputGroup-sizing-sm" />
-                        <label for="floatingInput">Registro</label>
-                    </div>
-                    <div className="form-floating">
-                        <input type="text" value={senha} onChange={handleSenhaChange} className="form-control" name="senha" id="senha" aria-label="Small" aria-describedby="inputGroup-sizing-sm" />
-                        <label for="floatingsenha">Senha</label>
-                    </div>
-                    <button className="w-100 btn btn-lg btn-primary" type="submit" onClick={realizarLogin}>Logar</button>
-                    <p className="mt-5 mb-3 text-muted">&copy; 2023</p>
-                </form>
-            </div>
-            <div className="row justify-content-center">
-                <div className="col-md-6 col-lg-5">
-                    <div className="login-wrap p-4 p-md-5">
-                        <div className="icon d-flex align-items-center justify-content-center">
-                            <span className="fa fa-user-o"></span>
-                        </div>
-                    </div>
+        try {
+            objLogin.senha = MD5(objLogin.senha).toString();
+            const response = await fetch("http://" + ip + ":" + porta + "/login", {
+                method: 'post',
+                body: JSON.stringify(objLogin),
+                headers: {
+                    'Content-type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            });
+
+            if (response.status === 200 || response.status === 401 || response.status === 403) {
+
+                const responseData = await response.json();
+                console.log('RECEBIDO: ', responseData);
+                if (response.status === 200) {
+                    localStorage.setItem('token', responseData.token);
+                    localStorage.setItem('registro', responseData.registro);
+                    redirecionarParaInicio();
+                } else if (response.status === 401) {
+                    console.error(responseData.message);
+                    setMensagem(responseData.message);
+                }
+            } else {
+                console.error(`Erro na solicitação: ${response.status}`);
+                setMensagem(`Erro na solicitação: ${response.status}`);
+
+                const responseText = await response.text();
+                console.log('Resposta completa:', responseText);
+            }
+        } catch (error) {
+            console.error(error);
+            setMensagem("Erro ao verificar usuário.");
+            return null;
+        }
+    }
+
+    const redirecionarParaInicio = () => {
+        navigate("/adm/" + objLogin.registro);
+    };
+
+    return (
+        <section className="ftco-section">
+            <Navigation />
+            <div className="container">
+                <div className="row justify-content-center">
+                    {
+                        <form>
+                            <h1 className="mb-4 fw-normal">Faça seu login no SADBBPV</h1>
+                            <div className="form-floating">
+                                <input type="text" value={objLogin.registro} onChange={capturarValor} className="form-control form-control-sm" name="registro" id="registro" aria-label="Small" aria-describedby="inputGroup-sizing-sm" />
+                                <label htmlFor="registro">Registro</label>
+                            </div>
+                            <div className="form-floating">
+                                <input type="text" value={objLogin.senha} onChange={capturarValor} className="form-control form-control-sm" name="senha" id="senha" aria-label="Small" aria-describedby="inputGroup-sizing-sm" />
+                                <label type="password" htmlFor="senha">Senha</label>
+                            </div>
+                            <button className="w-100 btn btn-lg btn-primary" type="button" onClick={realizarLogin}>Logar</button>
+                            <p className="mt-5 mb-3 text-muted">&copy; 2023</p>
+                        </form>
+                    }
                 </div>
+                <div> {mensagem} </div>
             </div>
-
-        </div>
-    </section>
-)
+        </section>
+    )
 }
 
 
