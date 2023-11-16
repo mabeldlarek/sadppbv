@@ -19,11 +19,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Controller
 @RestController
@@ -40,7 +37,6 @@ public class AuthController {
     @Autowired
     private RegistrarLogsRequestResponse log;
     private Set<String> tokenBlacklist = new HashSet<>();
-    private static final Logger logger = LoggerFactory.getLogger(RegistrarLogsRequestResponse.class);
 
     @Autowired
     public AuthController(AuthService authorizationService, UserService userService) {
@@ -52,10 +48,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<Object> login( @RequestBody @Valid LoginRequestDTO loginRequestDTO, HttpServletRequest request){
         ResponseEntity response = null;
-        logger.info("RECEBIDO");
-        Collections.list(request.getHeaderNames())
-                .forEach(headerName -> System.out.println(headerName + ": " + request.getHeader(headerName)));
-        System.out.println(loginRequestDTO);
+        log.addLogHeadBody(request,loginRequestDTO);
         try {
             authenticationManager = context.getBean(AuthenticationManager.class);
             Object respostaLogin = authorizationService.login(loginRequestDTO);
@@ -69,14 +62,13 @@ public class AuthController {
             response = ResponseEntity.status(403).body(new ResponseDTO("Erro:" + e, false));
         }
 
-        logger.info("ENVIADO " + response);
-
+        log.addLogResponse(response);
         return response;
     }
 
    @PostMapping("/logout")
     public ResponseEntity<Object> logout(HttpServletRequest request){
-       System.out.println("RECEBIDO: " + request);
+       log.addLogHeadBody(request,null);
        String token = extractTokenFromRequest(request);
         ResponseDTO response = null;
         if (token != null) {
@@ -84,13 +76,16 @@ public class AuthController {
         }
 
         if(response!= null && response.isSucess()) {
-            System.out.println("ENVIADO: " + response);
+            log.addLogResponse(response);
             return ResponseEntity.ok().body(response);
         }
         else
-            System.out.println("ENVIADO: " + response); // refatorar
-            return ResponseEntity.status(401).body(response);
+            log.addLogResponse(response);
+
+        return ResponseEntity.status(401).body(response);
+
    }
+
 
     private String extractTokenFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");

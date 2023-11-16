@@ -10,23 +10,25 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 
 import java.util.Enumeration;
+import java.util.StringJoiner;
 
 @Component
 public class RegistrarLogsRequestResponse {
     private static final Logger logger = LoggerFactory.getLogger(RegistrarLogsRequestResponse.class);
-
-    public static void addLogHeadBody(HttpServletRequest request){
+    private static StringJoiner headersString = new StringJoiner(", ");
+    public static void addLogHeadBody(HttpServletRequest request, Object object){
+        logger.info("RECEBIDO:");
         Enumeration<String> headerNames = request.getHeaderNames();
+        String cabecalho = "";
         while (headerNames.hasMoreElements()) {
             String headerName = headerNames.nextElement();
             String headerValue = request.getHeader(headerName);
-            logger.info("Cabeçalho: " + headerName + " = " + headerValue);
+            cabecalho = headerName + " = " + headerValue ;
+            logger.info( cabecalho);
         }
 
-        ContentCachingRequestWrapper wrappedRequest = new ContentCachingRequestWrapper(request);
-        byte[] content = wrappedRequest.getContentAsByteArray();
-        String requestBody = new String(content);
-        logger.info("Corpo da Mensagem da Requisição: " + requestBody);
+        String requestBody = new String(String.valueOf(object));
+        logger.info("\nCorpo da Mensagem/variável da Requisição: " + requestBody);
     }
 
     public static void addLogResponse(Object response){

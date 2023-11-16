@@ -1,5 +1,6 @@
 package com.belarek.SADPPBV.service.impl;
 
+import com.belarek.SADPPBV.dto.GetUserDTO;
 import com.belarek.SADPPBV.dto.UserDTO;
 import com.belarek.SADPPBV.dto.UserUpdateDTO;
 import com.belarek.SADPPBV.entity.AuthToken;
@@ -38,17 +39,17 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public UserDTO findByRegister(int registro) {
+    public GetUserDTO findByRegister(int registro) {
         User person = (User) userRepository.findByRegistro(registro);
         if(person!=null) {
-            return mapToDTO(person);
+            return mapToGetDTO(person);
         }
         return null;
     }
 
     @Override
     public String createPerson(UserDTO personDTO) {
-        UserDTO user = findByRegister(personDTO.getRegistro());
+        GetUserDTO user = findByRegister(personDTO.getRegistro());
         if(user == null) {
             UserDTO u = findByEmail(personDTO.getEmail());
             if(u!=null){
@@ -68,27 +69,21 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public UserDTO findById(Long id) {
-        User person = userRepository.findById(id).get();
-        UserDTO personDTO = new UserDTO();
-        personDTO.setEmail(person.getEmail());
-        personDTO.setNome(person.getNome());
-        personDTO.setRegistro(person.getRegistro());
-        personDTO.setSenha(person.getSenha());
-        personDTO.setTipo_usuario(person.getTipo_usuario());
-        return personDTO;
-    }
-
-    @Override
     public String updatePerson(UserUpdateDTO personDTO, int registro) {
         User user = userRepository.findByRegistro(registro);
+        String senhaEncriptografada = "";
         if (user != null) {
             UserDetails uEmail = userRepository.findByEmail(personDTO.getEmail());
             if(!personDTO.getEmail().equals(user.getEmail()) && uEmail!=null)
                 return "Email já existe";
+            if(personDTO.getSenha().isEmpty() || personDTO.getSenha().equals("d41d8cd98f00b204e9800998ecf8427e")){
+                senhaEncriptografada = user.getSenha();
+            } else {
+               senhaEncriptografada = new BCryptPasswordEncoder().encode(personDTO.getSenha());
+            }
             user.setNome(personDTO.getNome());
             user.setEmail(personDTO.getEmail());
-            user.setSenha(personDTO.getSenha());
+            user.setSenha(senhaEncriptografada);
             user.setRegistro(user.getRegistro());
             user.setTipo_usuario(user.getTipo_usuario());
             userRepository.save(user);
@@ -101,7 +96,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Transactional
     @Override
     public boolean deleteByRegistro(int registro) {
-        UserDTO personDeleted = findByRegister(registro);
+        GetUserDTO personDeleted = findByRegister(registro);
         if (personDeleted != null) {
             userRepository.deleteByRegistro(registro);
             return true;
@@ -111,9 +106,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 
     @Override
-    public List<UserDTO> listPersons() {
+    public List<GetUserDTO> listPersons() {
         List<User> personDTOList = userRepository.findAll();
-        return personDTOList.stream().map(person -> mapToDTO(person)).collect(Collectors.toList());
+        return personDTOList.stream().map(person -> mapToGetDTO(person)).collect(Collectors.toList());
     }
 
     @Override
@@ -137,7 +132,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         UserDTO personDTO = new UserDTO();
         personDTO.setNome(person.getNome());
         personDTO.setEmail(person.getEmail());
-        personDTO.setSenha(person.getSenha());
+        personDTO.setRegistro(person.getRegistro());
+        personDTO.setTipo_usuario(person.getTipo_usuario());
+        return personDTO;
+    }
+
+    private GetUserDTO mapToGetDTO(User person){
+        GetUserDTO personDTO = new GetUserDTO();
+        personDTO.setNome(person.getNome());
+        personDTO.setEmail(person.getEmail());
         personDTO.setRegistro(person.getRegistro());
         personDTO.setTipo_usuario(person.getTipo_usuario());
         return personDTO;

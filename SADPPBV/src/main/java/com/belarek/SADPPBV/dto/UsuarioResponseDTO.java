@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UsuarioResponseDTO {
-    UserDTO usuario;
+    private GetUserDTO usuario;
     private String message;
     private boolean sucess;
-    public UsuarioResponseDTO(UserDTO usuario, ResponseDTO responseDTO) {
+    public UsuarioResponseDTO(GetUserDTO usuario, ResponseDTO responseDTO) {
         this.usuario = usuario;
         this.message = responseDTO.getMessage();
         this.sucess = responseDTO.isSucess();
