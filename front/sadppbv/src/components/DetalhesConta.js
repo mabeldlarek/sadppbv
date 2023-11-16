@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Form, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import MD5 from "crypto-js/md5";
+
 
 const DetalhesConta = () => {
   const [usuario, setUsuario] = useState({
@@ -14,57 +16,51 @@ const DetalhesConta = () => {
   const token = localStorage.getItem('token');
   const registro = localStorage.getItem('registro');
   const [modoEdicao, setModoEdicao] = useState(false);
+  const [mensagem, setMensagem] = useState('');
 
+  const headers = {
+    'Authorization': `Bearer ${token}`,
+    'Content-type': 'application/json',
+    'Accept': 'application/json',
+  };
   useEffect(() => {
 
     const obterDetalhesUsuario = async () => {
+      console.log('ENVIADO: ', headers);
+      const metodo = 'GET';
+      const caminho = "/usuarios/"+ registro;
       try {
-        const response = await fetch("http://" + localStorage.getItem('ip') +":" + localStorage.getItem('porta') +"/usuarios/"+ registro, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-type': 'application/json',
-            'Accept': 'application/json',
-            'Cache-Control': 'no-cache'
-          },
+        const response = await fetch("http://" + localStorage.getItem('ip') +":" + localStorage.getItem('porta') + caminho, {
+          method: metodo,
+          headers: headers
         });
-        if (response.ok) {
-          const data = await response.json();
-          setUsuario(data.usuario); 
+
+        if (response.status === 200 || response.status === 401 || response.status === 403) {
+          const responseData = await response.json();
+          console.log('RECEBIDO: ', responseData);
+  
+          if (response.status === 200) {
+            setUsuario(responseData.usuario);
+          } else if (response.status === 401) {
+            console.error(responseData.message);
+            setMensagem(responseData.message);
+          }
         } else {
           console.error(`Erro na solicitação: ${response.status}`);
+          setMensagem(`Erro na solicitação: ${response.status}`);
+  
+          const responseText = await response.text();
+          console.log('Resposta completa:', responseText);
         }
       } catch (error) {
-        console.error('Erro ao obter detalhes do usuário:', error);
+        console.error(error);
+        setMensagem("Erro ao verificar conta do usuário logado.");
+        return null;
       }
     };
 
     obterDetalhesUsuario();
   }, []); 
-
-  const editar = async () => {
-    try {
-        const response = await fetch("http://" + localStorage.getItem('ip') +":" + localStorage.getItem('porta') +"/usuarios/"+ usuario.registro, {
-          method: 'PUT',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-type': 'application/json',
-            'Accept': 'application/json',
-            'Cache-Control': 'no-cache'
-          },
-          body: JSON.stringify(usuario),
-        });
-  
-        if (response.ok) {
-          const data = await response.json();
-          console.log(data);
-        } else {
-          console.error(`Erro na solicitação: ${response.status}`);
-        }
-      } catch (error) {
-        console.error('Erro ao salvar edição:', error);
-      }
-    }
 
   const handleEditarClick = () => {
     setModoEdicao(true);
@@ -83,9 +79,45 @@ const DetalhesConta = () => {
     return password.replace(/./g, '*');
   }
 
+  const editar = async () => {
+    usuario.senha = MD5(usuario.senha).toString();
+    console.log(usuario.senha);
+    const corpo = JSON.stringify(usuario);
+    console.log('ENVIADO: ', headers, " ", corpo);
+
+    try {
+      const response = await fetch("http://" + localStorage.getItem('ip') + ":" + localStorage.getItem('porta') + "/usuarios/" + usuario.registro, {
+        method: 'PUT',
+        headers: headers,
+        body: corpo,
+      });
+
+      if (response.status === 200 || response.status === 401 || response.status === 403) {
+        const responseData = await response.json();
+        console.log('RECEBIDO: ', responseData);
+
+        if (response.status === 200) {
+          setMensagem(responseData.message);
+        } else if (response.status === 401) {
+          console.error(responseData.message);
+          setMensagem(responseData.message);
+        }
+      } else {
+        console.error(`Erro na solicitação: ${response.status}`);
+        setMensagem(`Erro na solicitação: ${response.status}`);
+
+        const responseText = await response.text();
+        console.log('Resposta completa:', responseText);
+      }
+    } catch (error) {
+      console.error(error);
+      setMensagem("Erro ao editar usuário.");
+    }
+  }
+
   return (
     <Container>
-      <h2>Detalhes da Conta</h2>
+      <h2>Minha Conta</h2>
       <Form>
         <Form.Group className="mb-3" controlId="formNome">
           <Form.Label>Nome</Form.Label>
@@ -114,21 +146,17 @@ const DetalhesConta = () => {
             <Form.Control type="text" plaintext readOnly value={usuario.email} />
           )}
         </Form.Group>
-
-        <Form.Group className="mb-3" controlId="formEmail">
+        {modoEdicao ? (
+        <Form.Group className="mb-3" controlId="formSenha">
           <Form.Label>Senha</Form.Label>
-          {modoEdicao ? (
             <Form.Control
               type="password"
               placeholder="Sua senha"
               value={usuario.senha}
               onChange={(e) => setUsuario({ ...usuario, senha: e.target.value })}
             />
-          ) : (
-            <Form.Control type="password" plaintext readOnly value={maskPassword(usuario.senha)} />
-          )}
-        </Form.Group>
-        <Form.Group className="mb-3" controlId="formEmail">
+        </Form.Group>) : null}
+        <Form.Group className="mb-3" controlId="formRegistro">
           <Form.Label>Registro</Form.Label>
           {modoEdicao ? (
             <Form.Control
@@ -141,7 +169,7 @@ const DetalhesConta = () => {
             <Form.Control type="text" plaintext readOnly value={usuario.registro} />
           )}
         </Form.Group>
-        <Form.Group className="mb-3" controlId="formEmail">
+        <Form.Group className="mb-3" controlId="formTipoUsuario">
           <Form.Label>Tipo de Usuário</Form.Label>
           {modoEdicao ? (
             <Form.Control
@@ -165,6 +193,7 @@ const DetalhesConta = () => {
           Editar
         </Button>
       )}
+      <div> {mensagem} </div>
     </Container>
   );
 };

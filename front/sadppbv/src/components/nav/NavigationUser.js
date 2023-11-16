@@ -16,38 +16,51 @@ function NavigationUser() {
   
     const [visualizacaoVisivel, setVisualizacaoVisivel] = useState(false);
 
-    const realizarLogout = () => {
-      fetch("http://" + ip + ":" + porta + "/logout", {
-        method: 'post',
-        headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-type': 'application/json',
-            'Accept': 'application/json',
-            'Cache-Control': 'no-cache'
-        }
-      })
-        .then(response => {
-          if (response.ok) {
-            return response.json();
+    const headers = {
+      'Authorization': `Bearer ${token}`,
+      'Content-type': 'application/json',
+      'Accept': 'application/json',
+    };
+
+    const realizarLogout = async () => {
+
+      console.log('ENVIADO: ', headers);
+  
+      try {
+          const response = await fetch("http://" + ip + ":" + porta + "/logout", {
+              method: 'post',
+              headers: headers
+          });
+  
+          if (response.status === 200 || response.status === 401 || response.status === 403) {
+              const responseData = await response.json();
+  
+              console.log('RECEBIDO: ', responseData);
+  
+              if (response.status === 200) {
+                localStorage.removeItem('token');
+                navigate('/');
+              } else if (response.status === 401) {
+                  console.error(responseData.message);
+                  setMensagem(responseData.message);
+              }
+                else if (response.status === 403) {
+                console.error(responseData.message);
+                setMensagem(responseData.message);
+            }
           } else {
-            console.error(`Erro na requisição. Status: ${response.status}`);
-            throw new Error('Erro na requisição');
+              console.error(`Erro na solicitação: ${response.status}`);
+              setMensagem(`Erro na solicitação: ${response.status}`);
+  
+              const responseText = await response.text();
+              console.log('Resposta completa:', responseText);
           }
-        })
-        .then(retorno_convertido => {
-          console.log(retorno_convertido);
-          if (retorno_convertido.sucess) {
-            localStorage.removeItem('token');
-            const eventoLogout= new Event('logout');
-            window.dispatchEvent(eventoLogout);
-            navigate('/');
-          } else
-            setMensagem(retorno_convertido.message);
-        })
-        .catch(error => {
+      } catch (error) {
           console.error(error);
-        });
-    }
+          setMensagem("Erro ao realizar o logout.");
+          return null;
+      }
+  }
 
     const minhaConta = () => {
         setVisualizacaoVisivel(true);

@@ -66,7 +66,6 @@ const Redirecionar = () => {
 
   return (
     <div>
-      {/* Renderizar com base no tipo de usuário */}
       {tipoUsuario === 1 ? (
         <div>
           <NavigationAdm/>
@@ -77,12 +76,9 @@ const Redirecionar = () => {
         </div>
       ) : (
         <div>
-          {/* Outro conteúdo ou mensagem de carregamento */}
           <h1>Carregando...</h1>
         </div>
       )}
-
-      {/* Exibir mensagem de erro, se houver */}
       {mensagem && <p>{mensagem}</p>}
     </div>
   );

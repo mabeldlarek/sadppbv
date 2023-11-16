@@ -16,7 +16,6 @@ function Login() {
     const [mensagem, setMensagem] = useState('');
     const ip = localStorage.getItem('ip');
     const porta = localStorage.getItem('porta');
-    const corpo = JSON.stringify(objLogin);
 
     const headers = {
         'Content-type': 'application/json',
@@ -28,17 +27,14 @@ function Login() {
     }
 
     const realizarLogin = async () => {
+        objLogin.senha = MD5(objLogin.senha).toString();
+        const corpo = JSON.stringify(objLogin);
         console.log('ENVIADO: ', headers, ' ', corpo);
-
         try {
-            objLogin.senha = MD5(objLogin.senha).toString();
             const response = await fetch("http://" + ip + ":" + porta + "/login", {
                 method: 'post',
-                body: JSON.stringify(objLogin),
-                headers: {
-                    'Content-type': 'application/json',
-                    'Accept': 'application/json'
-                }
+                body: corpo,
+                headers:headers
             });
 
             if (response.status === 200 || response.status === 401 || response.status === 403) {
@@ -63,7 +59,6 @@ function Login() {
         } catch (error) {
             console.error(error);
             setMensagem("Erro ao verificar usuário.");
-            return null;
         }
     }
 

@@ -5,35 +5,49 @@ import EdicaoUsuario from './EdicaoUsuario';
 const ListaUsuarios = () => {
   const [usuarios, setUsuarios] = useState([]);
   const [modo, setModo] = useState('lista');
-  const [modoEdicao, setModoEdicao] = useState(false);
-  const [modoCadastro, setModoCadastro] = useState(false);
-  const [usuarioCadstrado, setUsuarioCadastrado] = useState(false);
   const [usuarioEditando, setUsuarioEditando] = useState(null);
   const [usuarioExcluindo, setUsuarioExcluindo] = useState(null);
   const ip = localStorage.getItem('ip');
   const porta = localStorage.getItem('porta');
   const token = localStorage.getItem('token');
+  const [mensagem, setMensagem] = useState('');
+
+  const headers = {
+    'Authorization': `Bearer ${token}`,
+    'Content-type': 'application/json',
+    'Accept': 'application/json',
+  };
 
   useEffect(() => {
     const obterUsuarios = async () => {
+      console.log('ENVIADO: ', headers);
       try {
         const response = await fetch(`http://${ip}:${porta}/usuarios`, {
           method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-type': 'application/json',
-            'Accept': 'application/json',
-            'Cache-Control': 'no-cache'
-          }
+          headers: headers
         });
-        if (response.ok) {
-          const data = await response.json();
-          setUsuarios(data.usuarios);
+
+        if (response.status === 200 || response.status === 401 || response.status === 403) {
+          const responseData = await response.json();
+          console.log('RECEBIDO: ', responseData);
+
+          if (response.status === 200) {
+            setUsuarios(responseData.usuarios);
+          } else if (response.status === 401) {
+            console.error(responseData.message);
+            setMensagem(responseData.message);
+          }
         } else {
           console.error(`Erro na solicitação: ${response.status}`);
+          setMensagem(`Erro na solicitação: ${response.status}`);
+
+          const responseText = await response.text();
+          console.log('Resposta completa:', responseText);
         }
       } catch (error) {
-        console.error('Erro ao obter usuários:', error);
+        console.error(error);
+        setMensagem("Erro ao obter usuários.");
+        return null;
       }
     };
 
@@ -41,50 +55,57 @@ const ListaUsuarios = () => {
   }, [usuarioEditando, usuarioExcluindo]);
 
   const deletarUsuario = async (usuarioRegistro) => {
+    console.log('ENVIADO: ', headers);
     try {
       const response = await fetch(`http://${ip}:${porta}/usuarios/${usuarioRegistro}`, {
         method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-type': 'application/json',
-          'Accept': 'application/json',
-          'Cache-Control': 'no-cache'
-        },
+        headers: headers
       });
 
-      if (response.ok) {
-        setUsuarioExcluindo(usuarioRegistro);
-        setModo('lista');
+      if (response.status === 200 || response.status === 401 || response.status === 403) {
+        const responseData = await response.json();
+        console.log('RECEBIDO: ', responseData);
+
+        if (response.status === 200) {
+          setUsuarioExcluindo(usuarioRegistro);
+          setModo('lista');
+          setMensagem(responseData.message);
+        } else if (response.status === 401) {
+          console.error(responseData.message);
+          setMensagem(responseData.message);
+        }
       } else {
         console.error(`Erro na solicitação: ${response.status}`);
+        setMensagem(`Erro na solicitação: ${response.status}`);
+
+        const responseText = await response.text();
+        console.log('Resposta completa:', responseText);
       }
     } catch (error) {
-      console.error('Erro ao deletar usuário:', error);
+      console.error(error);
+      setMensagem("Erro ao deletar usuário.");
+      return null;
     }
   };
 
   const cadastrar = () => {
-    setUsuarioCadastrado(false)
     setModo('cadastro');
   };
-  
+
   const editarUsuario = (usuario) => {
     setModo('edicao');
-    setModoEdicao(true);
     setUsuarioEditando(usuario);
   };
 
   const salvarCadastro = (usuarioCadastrado) => {
-    setUsuarioCadastrado(true)
     setModo('lista');
   };
 
   const salvarEdicao = (usuarioEditado) => {
     setUsuarioEditando(usuarioEditado)
-    setModoEdicao(false);
     setUsuarioEditando(null);
   };
-  
+
   return (
     <div>
       {modo === 'lista' && (
@@ -108,6 +129,7 @@ const ListaUsuarios = () => {
           <button className="btn btn-success" onClick={cadastrar}>
             Cadastrar Novo Usuário
           </button>
+          <div> {mensagem} </div>
         </div>
       )}
 
@@ -116,7 +138,7 @@ const ListaUsuarios = () => {
       )}
 
       {modo === 'cadastro' && (
-        <Formulario onSaveCadastro={salvarCadastro}/>
+        <Formulario onSaveCadastro={salvarCadastro} />
       )}
     </div>
   );
