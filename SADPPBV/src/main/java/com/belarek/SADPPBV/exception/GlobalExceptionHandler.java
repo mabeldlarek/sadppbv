@@ -13,6 +13,6 @@ public class GlobalExceptionHandler {
         ResponseDTO response = new ResponseDTO();
         response.setMessage(e.getAllErrors().get(0).getDefaultMessage());
         response.setSucess(false);
-        return ResponseEntity.badRequest().body(response);
+        return ResponseEntity.status(403).body(response);
     }
 }

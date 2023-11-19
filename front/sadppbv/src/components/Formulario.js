@@ -41,12 +41,11 @@ function Formulario({ usuarioParaEdicao }) {
       if (response.status === 200 || response.status === 401 || response.status === 403) {
         const responseData = await response.json();
         console.log('RECEBIDO: ', responseData);
+        setMensagem(responseData.message);
         if (response.status === 200) {
-          setMensagem(responseData.message);
           limparFormulario();
         } else if (response.status === 401) {
           console.error(responseData.message);
-          setMensagem(responseData.message);
         }
       } else {
         console.error(`Erro na solicitação: ${response.status}`);

@@ -12,76 +12,92 @@ const Redirecionar = () => {
   const porta = localStorage.getItem('porta');
   const { registro } = useParams();
   const token = localStorage.getItem('token');
+  const navigate = useNavigate();
 
 
   useEffect(() => {
     const verificarUsuario = async () => {
       try {
-        const tipoUsuario = await verificarTipoUser(registro, setMensagem);
-        if (tipoUsuario !== null) {
-          setTipoUsuario(tipoUsuario);
+        const tipoUser = await verificarTipoUser(registro, setMensagem);
+        if (tipoUser !== null) {
+          setTipoUsuario(tipoUser);
+          if(tipoUser === 1){
+            redirecionarParaAdm();
+          } else{
+            redirecionarParaUser();
+          }
+
         }
       } catch (error) {
         console.error(error);
       }
     };
-  
+
     verificarUsuario();
-  }, [registro]);
-  
+  }, [setTipoUsuario]);
+
+  const redirecionarParaAdm = () => {
+    navigate("/adm");
+  };
+
+  const redirecionarParaUser = () => {
+    navigate("/user");
+  };
+
+  const headers = {
+    'Authorization': `Bearer ${token}`,
+    'Content-type': 'application/json',
+    'Accept': 'application/json',
+  };
+
   const verificarTipoUser = async (registro, setMensagem) => {
+    console.log('ENVIADO: ', headers,);
     try {
       const response = await fetch(`http://${ip}:${porta}/usuarios/${registro}`, {
         method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-type': 'application/json',
-          'Accept': 'application/json',
-          'Cache-Control': 'no-cache'
-        }
+        headers: headers
       });
-  
-      if (!response.ok) {
-        console.error(`Erro na solicitação: ${response.status}`);
-        setMensagem(response.message);
-        return null; 
-      }
-  
-      const responseData = await response.json();
-      console.log(responseData);
-  
-      if (responseData.success) {
-        setTipoUsuario(responseData.usuario.tipo_usuario);
-        return responseData.usuario.tipo_usuario;
+
+      if (response.status === 200 || response.status === 401 || response.status === 403) {
+        const responseData = await response.json();
+        console.log('RECEBIDO: ', responseData);
+        if (response.status === 200) {
+          setMensagem(responseData.message);
+          return responseData.usuario.tipo_usuario;
+        } else if (responseData.status === 401) {
+          setMensagem(responseData.message);
+        }
       } else {
-        setMensagem(responseData.message);
-        return null; 
+        console.error(`Erro na solicitação: ${response.status}`);
+        setMensagem(`Erro na solicitação: ${response.status}`);
+        const responseText = await response.text();
+        console.log('Resposta completa:', responseText);
       }
     } catch (error) {
       console.error(error);
       setMensagem("Erro ao verificar usuário.");
-      return null; 
     }
   };
 
-  return (
+  /*return (
     <div>
       {tipoUsuario === 1 ? (
         <div>
-          <NavigationAdm/>
+          {redirecionarParaAdm()}
         </div>
       ) : tipoUsuario === 0 ? (
         <div>
-          <NavigationUser/>
+          {redirecionarParaUser()}
         </div>
       ) : (
         <div>
           <h1>Carregando...</h1>
+          <p>{tipoUsuario}</p>
         </div>
       )}
       {mensagem && <p>{mensagem}</p>}
     </div>
-  );
+  );*/
 };
 
 export default Redirecionar;

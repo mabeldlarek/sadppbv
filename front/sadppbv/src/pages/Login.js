@@ -63,7 +63,7 @@ function Login() {
     }
 
     const redirecionarParaInicio = () => {
-        navigate("/adm/" + objLogin.registro);
+        navigate("/redirect/" + objLogin.registro);
     };
 
     return (

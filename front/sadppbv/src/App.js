@@ -27,7 +27,7 @@ function App() {
           <Route path="login" element={<Login />} />
           <Route path="adm" element={<NavigationAdm />} />
           <Route path="user" element={<NavigationUser />} />
-          <Route path="/adm/:registro" element={<Redirecionar />} />
+          <Route path="/redirect/:registro" element={<Redirecionar />} />
 
       </Routes>
   </Router>
