@@ -41,7 +41,7 @@ public class UserController {
             usuarios = personService.listPersons();
             if(usuarios != null) {
                 response.setMessage("Lista de usuários encontrada com sucesso");
-                response.setSucess(true);
+                response.setSuccess(true);
                 System.out.println("ENVIADO: " + response);
                 log.addLogResponse(ResponseEntity.ok().body(new ListaUsuariosResponseDTO(usuarios, response)));
                 return ResponseEntity.ok().body(new ListaUsuariosResponseDTO(usuarios, response));
@@ -70,17 +70,17 @@ public class UserController {
                     userDTO = personService.findByRegister(registro);
                     if (userDTO != null) {
                         response.setMessage("Usuário encontrado com sucesso");
-                        response.setSucess(true);
+                        response.setSuccess(true);
                         log.addLogResponse( ResponseEntity.ok().body(new UsuarioResponseDTO(userDTO, response)));
                         return ResponseEntity.ok().body(new UsuarioResponseDTO(userDTO, response));
                     } else {
                         response.setMessage("Erro ao encontrar o usuário");
-                        response.setSucess(false);
+                        response.setSuccess(false);
                     }
                 }
                 else {
                     response.setMessage("Não autorizado: Você pode ver somente seu registro");
-                    response.setSucess(false);
+                    response.setSuccess(false);
                 }
             }
         } catch (Exception e){
@@ -97,22 +97,19 @@ public class UserController {
         log.addLogHeadBody(request,personDTO);
             try {
                String resultado = personService.createPerson(personDTO);
-               if (resultado.equals("sucesso")) {
-                   response.setMessage("Usuário criado com sucesso");
-                   response.setSucess(true);
+               if (resultado.equals("success")) {
+                   response.setMessage("Usuário criado com success");
+                   response.setSuccess(true);
+                   log.addLogResponse(ResponseEntity.ok(response));
+                   return ResponseEntity.ok(response);
                } else {
                    response.setMessage(resultado);
-                   response.setSucess(false);
+                   response.setSuccess(false);
                }
            } catch (Exception e){
                 log.addLogResponse(ResponseEntity.status(403).body(new ResponseDTO("Erro ao realizar cadastro:" + e.getMessage(), false)));
                 return ResponseEntity.status(403).body(new ResponseDTO("Erro ao realizar cadastro:" + e.getMessage(), false));
            }
-
-            if(response.isSucess()){
-                log.addLogResponse(ResponseEntity.ok(response));
-                return ResponseEntity.ok(response);
-            }
 
         log.addLogResponse(ResponseEntity.status(401).body(response));
         return ResponseEntity.status(401).body(response);
@@ -130,19 +127,19 @@ public class UserController {
             if(token !=null) {
                 if (personService.verificarAutorizacaoObterUsuario(token, registro)) {
                     String resultado = personService.updatePerson(userUpdateDTO, registro);
-                    if (resultado.equals("sucesso")) {
-                        response.setMessage("Alteração no cadastrado realizada com sucesso.");
-                        response.setSucess(true);
+                    if (resultado.equals("success")) {
+                        response.setMessage("Alteração no cadastrado realizada com success.");
+                        response.setSuccess(true);
                         log.addLogResponse(ResponseEntity.ok().body(response));
                         return ResponseEntity.ok().body(response);
                     } else {
                         response.setMessage("Falha ao realizar alteração :" + resultado);
-                        response.setSucess(false);
+                        response.setSuccess(false);
                     }
                 }
                 else {
                     response.setMessage("Não autorizado: Você pode editar somente o seu registro");
-                    response.setSucess(false);
+                    response.setSuccess(false);
                 }
             }
         } catch (Exception e){
@@ -150,8 +147,8 @@ public class UserController {
             return ResponseEntity.status(403).body(new ResponseDTO("Erro ao realizar update: " + e.getMessage(), false));
         }
 
-        log.addLogResponse(ResponseEntity.status(403).body(response));
-        return ResponseEntity.status(403).body(response);
+        log.addLogResponse(ResponseEntity.status(401).body(response));
+        return ResponseEntity.status(401).body(response);
     }
 
     @DeleteMapping("usuarios/{registro}")
@@ -159,17 +156,17 @@ public class UserController {
         log.addLogHeadBody(request,registro);
         try {
             if (personService.deleteByRegistro(registro)) {
-                response.setMessage("O usuário foi apagado com sucesso.");
-                response.setSucess(true);
+                response.setMessage("O usuário foi apagado com success.");
+                response.setSuccess(true);
             } else {
                 response.setMessage("Usuário inexistente.");
-                response.setSucess(false);
+                response.setSuccess(false);
             }
         } catch (Exception e) {
             log.addLogResponse(ResponseEntity.status(403).body(new ResponseDTO("Erro ao deletar o usuário :" + e.getMessage(), false)));
             return ResponseEntity.status(403).body(new ResponseDTO("Erro ao deletar o usuário :" + e.getMessage(), false));
         }
-        if(response.isSucess()){
+        if(response.isSuccess()){
             log.addLogResponse(ResponseEntity.ok().body(response));
             return ResponseEntity.ok().body(response);
         }

@@ -9,11 +9,11 @@ import java.util.List;
 public class ListaUsuariosResponseDTO {
     private List<GetUserDTO> usuarios;
     private String message;
-    private boolean sucess;
+    private boolean success;
 
     public ListaUsuariosResponseDTO(List<GetUserDTO> usuarios, ResponseDTO responseDTO) {
         this.usuarios = usuarios;
         this.message = responseDTO.getMessage();
-        this.sucess = responseDTO.isSucess();
+        this.success = responseDTO.isSuccess();
     }
 }

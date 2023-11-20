@@ -75,7 +75,7 @@ public class AuthController {
             response = authorizationService.logout(token);
         }
 
-        if(response!= null && response.isSucess()) {
+        if(response!= null && response.isSuccess()) {
             log.addLogResponse(response);
             return ResponseEntity.ok().body(response);
         }

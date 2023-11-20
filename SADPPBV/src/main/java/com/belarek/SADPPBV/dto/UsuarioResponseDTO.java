@@ -11,11 +11,11 @@ import lombok.NoArgsConstructor;
 public class UsuarioResponseDTO {
     private GetUserDTO usuario;
     private String message;
-    private boolean sucess;
+    private boolean success;
     public UsuarioResponseDTO(GetUserDTO usuario, ResponseDTO responseDTO) {
         this.usuario = usuario;
         this.message = responseDTO.getMessage();
-        this.sucess = responseDTO.isSucess();
+        this.success = responseDTO.isSuccess();
     }
 
 }

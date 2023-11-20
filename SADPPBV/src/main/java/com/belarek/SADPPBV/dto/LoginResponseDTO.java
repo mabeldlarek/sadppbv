@@ -11,5 +11,5 @@ public class LoginResponseDTO {
     private int registro;
     private String token;
     private String message;
-    private boolean sucess;
+    private boolean success;
 }

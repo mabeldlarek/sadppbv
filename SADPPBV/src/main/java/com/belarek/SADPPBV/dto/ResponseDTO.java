@@ -10,5 +10,5 @@ import org.springframework.http.HttpStatus;
 @NoArgsConstructor
 public class ResponseDTO {
     private String message;
-    private boolean sucess;
+    private boolean success;
 }

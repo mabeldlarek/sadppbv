@@ -66,6 +66,42 @@ const DetalhesConta = () => {
     setModoEdicao(true);
   };
 
+  const handleExcluirClick = () => {
+    deletarUsuario();
+  };
+
+  const deletarUsuario = async () => {
+    console.log('ENVIADO: ', headers);
+    const caminho = "/usuarios/"+ registro;
+    try {
+      const response = await fetch("http://" + localStorage.getItem('ip') +":" + localStorage.getItem('porta') + caminho, {
+        method: 'DELETE',
+        headers: headers
+      });
+
+      if (response.status === 200 || response.status === 401 || response.status === 403) {
+        const responseData = await response.json();
+        console.log('RECEBIDO: ', responseData);
+        if (response.status === 200) {
+          setMensagem(responseData.message);
+          navigate('/')
+        } else if (response.status === 401) {
+          setMensagem(responseData.message);
+        }
+      } else {
+        console.error(`Erro na solicitação: ${response.status}`);
+        setMensagem(`Erro na solicitação: ${response.status}`);
+
+        const responseText = await response.text();
+        console.log('Resposta completa:', responseText);
+      }
+    } catch (error) {
+      console.error(error);
+      setMensagem("Erro ao deletar usuário.");
+      return null;
+    }
+  };
+
   const handleSalvarEdicao = async () => {
     try {
       setModoEdicao(false);
@@ -193,6 +229,9 @@ const DetalhesConta = () => {
           Editar
         </Button>
       )}
+      <Button variant="secondary" onClick={handleExcluirClick}>
+         Excluir
+       </Button>
       <div> {mensagem} </div>
     </Container>
   );

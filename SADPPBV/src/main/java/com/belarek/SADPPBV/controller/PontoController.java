@@ -33,7 +33,7 @@ public class PontoController {
     public ResponseEntity<ResponseDTO> createPonto(@RequestBody @Valid PontoDTO pontoDTO) {
         pontoService.createPonto(pontoDTO);
         response.setMessage("Ponto criado com sucesso");
-        response.setSucess(true);
+        response.setSuccess(true);
         return ResponseEntity.ok().body(response);
     }
 }

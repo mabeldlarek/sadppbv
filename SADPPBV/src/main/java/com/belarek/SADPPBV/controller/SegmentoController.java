@@ -35,7 +35,7 @@ public class SegmentoController {
     public ResponseEntity<ResponseDTO> createSegmento(@RequestBody @Valid SegmentoDTO SegmentoDTO) {
         segmentoService.createSegmento(SegmentoDTO);
         response.setMessage("Segmento criado com sucesso");
-        response.setSucess(true);
+        response.setSuccess(true);
         return ResponseEntity.ok().body(response);
     }
 
@@ -43,7 +43,7 @@ public class SegmentoController {
     public ResponseEntity<ResponseDTO> updateSegmento(@PathVariable Long id, @RequestBody SegmentoDTO SegmentoDTO) {
         segmentoService.updateSegmento(SegmentoDTO, id);
         response.setMessage("Segmento atualizado com sucesso.");
-        response.setSucess(true);
+        response.setSuccess(true);
         return ResponseEntity.ok().body(response);
     }
 
@@ -51,7 +51,7 @@ public class SegmentoController {
     public ResponseEntity<ResponseDTO> deleteSegmento(@PathVariable Long id) {
         segmentoService.deleteSegmento(id);
         response.setMessage("Segmento removido com sucesso.");
-        response.setSucess(true);
+        response.setSuccess(true);
         return ResponseEntity.ok().body(response);
     }
 }

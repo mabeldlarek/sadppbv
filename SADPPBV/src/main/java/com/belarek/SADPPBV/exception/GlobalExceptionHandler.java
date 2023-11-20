@@ -12,7 +12,7 @@ public class GlobalExceptionHandler {
     ResponseEntity<ResponseDTO> handleValueEmptyException(MethodArgumentNotValidException e) {
         ResponseDTO response = new ResponseDTO();
         response.setMessage(e.getAllErrors().get(0).getDefaultMessage());
-        response.setSucess(false);
+        response.setSuccess(false);
         return ResponseEntity.status(403).body(response);
     }
 }
