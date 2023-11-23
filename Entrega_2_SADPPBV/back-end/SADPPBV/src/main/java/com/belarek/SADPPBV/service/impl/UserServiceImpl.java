@@ -63,7 +63,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             person.setRegistro(personDTO.getRegistro());
             person.setTipo_usuario(personDTO.getTipo_usuario());
             userRepository.save(person);
-            return "success";
+            return "sucesso";
         } else
             return "Registro já existe.";
     }
@@ -88,7 +88,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             user.setTipo_usuario(user.getTipo_usuario());
             userRepository.save(user);
 
-            return "success";
+            return "sucesso";
         }
         return "Usuário não encontrado";
     }
