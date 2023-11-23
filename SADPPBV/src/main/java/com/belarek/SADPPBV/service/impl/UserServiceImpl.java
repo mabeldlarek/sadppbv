@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             if(!personDTO.getEmail().equals(user.getEmail()) && uEmail!=null)
                 return "Email já existe";
             if(personDTO.getSenha().isEmpty() || personDTO.getSenha().equals("d41d8cd98f00b204e9800998ecf8427e")){
-                senhaEncriptografada = user.getSenha();
+                return "Senha deve ser informada";
             } else {
                senhaEncriptografada = new BCryptPasswordEncoder().encode(personDTO.getSenha());
             }

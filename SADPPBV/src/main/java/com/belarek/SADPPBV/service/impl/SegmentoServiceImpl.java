@@ -34,9 +34,19 @@ public class SegmentoServiceImpl implements SegmentoService {
 
     @Override
     public String updateSegmento(SegmentoDTO segmento, Long id) {
-      //  Segmento segmentoEncontrado = segmentoRepository.findById(id).get;
-        Segmento segmentoAlterado = mapToEntity(segmento);
-        segmentoRepository.save(segmentoAlterado);
+        try {
+            Segmento segmentoEncontrado = segmentoRepository.findById(id).get();
+            if(segmentoEncontrado!=null){
+                segmentoEncontrado.setDirecao(segmento.getDirecao());
+                segmentoEncontrado.setStatus(segmento.getStatus());
+                segmentoEncontrado.setPonto_final(segmento.getPonto_final());
+                segmentoEncontrado.setPonto_inicial(segmento.getPonto_inicial());
+                segmentoEncontrado.setDistancia(segmento.getDistancia());
+                segmentoRepository.save(segmentoEncontrado);
+            }
+        } catch (Exception e){
+            return "Erro:" + e;
+        }
         return "sucesso";
     }
 
