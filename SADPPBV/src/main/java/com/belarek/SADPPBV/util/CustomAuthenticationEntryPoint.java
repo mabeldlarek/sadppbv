@@ -5,7 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
@@ -17,6 +19,7 @@ import java.io.IOException;
 public class CustomAuthenticationEntryPoint extends BasicAuthenticationEntryPoint {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private RegistrarLogsRequestResponse log;
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)
@@ -26,5 +29,6 @@ public class CustomAuthenticationEntryPoint extends BasicAuthenticationEntryPoin
         ResponseDTO responseDTO = new ResponseDTO("Não autenticado", false);
         String errorResponseJson = objectMapper.writeValueAsString(responseDTO);
         response.getWriter().write(errorResponseJson);
+        log.addLogResponse(response);
     }
 }

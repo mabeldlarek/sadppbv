@@ -1,13 +1,12 @@
 package com.belarek.SADPPBV.controller;
 
 import com.belarek.SADPPBV.dto.*;
-import com.belarek.SADPPBV.entity.User;
+import com.belarek.SADPPBV.dto.usuarios.*;
 import com.belarek.SADPPBV.security.TokenService;
 import com.belarek.SADPPBV.service.UserService;
 import com.belarek.SADPPBV.util.RegistrarLogsRequestResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;

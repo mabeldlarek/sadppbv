@@ -39,12 +39,19 @@ public class SecurityConfigurations {
                 .csrf(crsf -> crsf.disable()).cors(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/segmentos").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/usuarios/{registro}").authenticated()
                         .requestMatchers(HttpMethod.GET, "/usuarios/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/usuarios/**").authenticated()
                                 .requestMatchers(HttpMethod.POST, "/usuarios/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/usuarios/**").authenticated()
+
+                       /* .requestMatchers(HttpMethod.PUT, "/usuarios/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/segmentos/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/segmentos/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/segmentos").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/segmentos/**").hasRole("ADMIN")*/
+
                         .anyRequest().authenticated()
                 )
                 .logout((logout) -> logout

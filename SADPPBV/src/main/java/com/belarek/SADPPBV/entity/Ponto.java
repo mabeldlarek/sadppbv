@@ -1,11 +1,13 @@
 package com.belarek.SADPPBV.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Data
+@NoArgsConstructor
+@Table(name = "pontos")
 public class Ponto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

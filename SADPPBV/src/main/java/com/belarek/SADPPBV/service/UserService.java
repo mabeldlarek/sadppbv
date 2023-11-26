@@ -1,8 +1,8 @@
 package com.belarek.SADPPBV.service;
 
-import com.belarek.SADPPBV.dto.GetUserDTO;
-import com.belarek.SADPPBV.dto.UserDTO;
-import com.belarek.SADPPBV.dto.UserUpdateDTO;
+import com.belarek.SADPPBV.dto.usuarios.GetUserDTO;
+import com.belarek.SADPPBV.dto.usuarios.UserDTO;
+import com.belarek.SADPPBV.dto.usuarios.UserUpdateDTO;
 
 import java.util.List;
 

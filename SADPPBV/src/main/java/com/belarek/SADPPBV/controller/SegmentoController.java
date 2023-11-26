@@ -1,8 +1,12 @@
 package com.belarek.SADPPBV.controller;
 
 import com.belarek.SADPPBV.dto.ResponseDTO;
-import com.belarek.SADPPBV.dto.SegmentoDTO;
+import com.belarek.SADPPBV.dto.segmentos.GetSegmentoDTO;
+import com.belarek.SADPPBV.dto.segmentos.ListSegmentoDTO;
+import com.belarek.SADPPBV.dto.segmentos.SegmentoDTO;
+import com.belarek.SADPPBV.dto.usuarios.ListaUsuariosResponseDTO;
 import com.belarek.SADPPBV.service.SegmentoService;
+import com.belarek.SADPPBV.util.RegistrarLogsRequestResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,9 +16,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
+@CrossOrigin(origins = "*")
+@RestController
 public class SegmentoController {
     private SegmentoService segmentoService;
     private ResponseDTO response;
+    private RegistrarLogsRequestResponse log;
      
     @Autowired
     public SegmentoController(SegmentoService segmentoService) {
@@ -23,35 +30,64 @@ public class SegmentoController {
     }
 
     @GetMapping("segmentos")
-    public ResponseEntity<List<SegmentoDTO>> listSegmentos() {
-        return ResponseEntity.ok().body(segmentoService.listSegmentos());
+    public ResponseEntity<Object> listSegmentos() {
+        List<SegmentoDTO> segmentos = segmentoService.listSegmentos();
+        if(!segmentos.isEmpty()){
+            log.addLogResponse(ResponseEntity.ok().body(new ListSegmentoDTO(segmentos,new ResponseDTO("Segmentos encontrados", true))));
+
+            return ResponseEntity.ok().body(new ListSegmentoDTO(segmentos,new ResponseDTO("Segmentos encontrados", true)));
+        }
+        log.addLogResponse(ResponseEntity.status(403).body(new ResponseDTO("Falha ao obter segmentos", false)));
+        return ResponseEntity.status(403).body(new ResponseDTO("Falha ao obter segmentos", false));
     }
     @GetMapping("segmentos/{id}")
-    public ResponseEntity<SegmentoDTO> listSegmentoById(@PathVariable Long id) {
-        return ResponseEntity.ok().body(segmentoService.findById(id));
+    public ResponseEntity<Object> listSegmentoById(@PathVariable Long id) {
+        SegmentoDTO resultado = segmentoService.findById(id);
+        if(resultado!=null){
+            return ResponseEntity.ok().body(new GetSegmentoDTO(resultado, new ResponseDTO("Segmento encontrado com sucesso", true)));
+        } else
+            return ResponseEntity.status(403).body(new ResponseDTO("Falha ao obter segmento", false));
     }
 
     @PostMapping("segmentos")
     public ResponseEntity<ResponseDTO> createSegmento(@RequestBody @Valid SegmentoDTO SegmentoDTO) {
-        segmentoService.createSegmento(SegmentoDTO);
-        response.setMessage("Segmento criado com sucesso");
-        response.setSuccess(true);
-        return ResponseEntity.ok().body(response);
+        String resultado = segmentoService.createSegmento(SegmentoDTO);
+        if(resultado.equals("success")){
+            response.setMessage("Segmento criado com sucesso");
+            response.setSuccess(true);
+            return ResponseEntity.ok().body(response);
+        } else {
+            response.setMessage("Erro: " + resultado);
+            response.setSuccess(false);
+            return ResponseEntity.status(403).body(response);
+        }
     }
 
     @PutMapping("segmento/{id}")
     public ResponseEntity<ResponseDTO> updateSegmento(@PathVariable Long id, @RequestBody SegmentoDTO SegmentoDTO) {
-        segmentoService.updateSegmento(SegmentoDTO, id);
-        response.setMessage("Segmento atualizado com sucesso.");
-        response.setSuccess(true);
-        return ResponseEntity.ok().body(response);
+        String resultado = segmentoService.updateSegmento(SegmentoDTO, id);
+        if(resultado.equals("success")) {
+            response.setMessage("Segmento atualizado com sucesso.");
+            response.setSuccess(true);
+            return ResponseEntity.ok().body(response);
+        } else {
+            response.setMessage("Erro: " + resultado);
+            response.setSuccess(false);
+            return ResponseEntity.status(403).body(response);
+        }
     }
 
     @DeleteMapping("segmento/{id}")
     public ResponseEntity<ResponseDTO> deleteSegmento(@PathVariable Long id) {
-        segmentoService.deleteSegmento(id);
-        response.setMessage("Segmento removido com sucesso.");
-        response.setSuccess(true);
-        return ResponseEntity.ok().body(response);
+        String resultado = segmentoService.deleteSegmento(id);
+        if(resultado.equals("success")) {
+            response.setMessage("Segmento removido com sucesso.");
+            response.setSuccess(true);
+            return ResponseEntity.ok().body(response);
+        } else {
+            response.setMessage("Erro: " + resultado);
+            response.setSuccess(false);
+            return ResponseEntity.status(403).body(response);
+        }
     }
 }

@@ -1,7 +1,7 @@
 package com.belarek.SADPPBV.controller;
 
-import com.belarek.SADPPBV.dto.LoginRequestDTO;
-import com.belarek.SADPPBV.dto.LoginResponseDTO;
+import com.belarek.SADPPBV.dto.auth.LoginRequestDTO;
+import com.belarek.SADPPBV.dto.auth.LoginResponseDTO;
 import com.belarek.SADPPBV.dto.ResponseDTO;
 import com.belarek.SADPPBV.security.TokenService;
 import com.belarek.SADPPBV.service.AuthService;
@@ -10,8 +10,6 @@ import com.belarek.SADPPBV.util.RegistrarLogsRequestResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.ResponseEntity;

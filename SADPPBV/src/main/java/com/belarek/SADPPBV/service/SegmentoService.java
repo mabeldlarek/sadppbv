@@ -1,6 +1,6 @@
 package com.belarek.SADPPBV.service;
 
-import com.belarek.SADPPBV.dto.SegmentoDTO;
+import com.belarek.SADPPBV.dto.segmentos.SegmentoDTO;
 
 import java.util.List;
 

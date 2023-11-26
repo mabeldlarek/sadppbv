@@ -1,8 +1,8 @@
 package com.belarek.SADPPBV.service.impl;
 
-import com.belarek.SADPPBV.dto.GetUserDTO;
-import com.belarek.SADPPBV.dto.UserDTO;
-import com.belarek.SADPPBV.dto.UserUpdateDTO;
+import com.belarek.SADPPBV.dto.usuarios.GetUserDTO;
+import com.belarek.SADPPBV.dto.usuarios.UserDTO;
+import com.belarek.SADPPBV.dto.usuarios.UserUpdateDTO;
 import com.belarek.SADPPBV.entity.AuthToken;
 import com.belarek.SADPPBV.entity.User;
 import com.belarek.SADPPBV.repository.TokenRepository;

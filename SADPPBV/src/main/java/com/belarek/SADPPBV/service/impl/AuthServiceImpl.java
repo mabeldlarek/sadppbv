@@ -1,13 +1,15 @@
 package com.belarek.SADPPBV.service.impl;
 
 import com.belarek.SADPPBV.dto.*;
+import com.belarek.SADPPBV.dto.auth.AuthTokenDTO;
+import com.belarek.SADPPBV.dto.auth.LoginRequestDTO;
+import com.belarek.SADPPBV.dto.auth.LoginResponseDTO;
 import com.belarek.SADPPBV.entity.AuthToken;
 import com.belarek.SADPPBV.entity.User;
 import com.belarek.SADPPBV.repository.UserRepository;
 import com.belarek.SADPPBV.security.TokenService;
 import com.belarek.SADPPBV.service.AuthService;
 import com.belarek.SADPPBV.service.AuthTokenService;
-import com.belarek.SADPPBV.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.AuthenticationManager;
