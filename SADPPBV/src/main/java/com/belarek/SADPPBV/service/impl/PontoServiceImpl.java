@@ -88,21 +88,21 @@ public class PontoServiceImpl implements PontoService {
 
     private Ponto mapToEntity(PontoPostPutDTO pontoPostPut){
         Ponto ponto = new Ponto();
-        ponto.setNome(ponto.getNome());
+        ponto.setNome(pontoPostPut.getNome());
         return ponto;
     }
 
     private PontoDTO mapToDTO(Ponto ponto){
         PontoDTO pontoDTO = new PontoDTO();
         pontoDTO.setNome(ponto.getNome());
-        ponto.setId(ponto.getId());
+        pontoDTO.setPonto_id(ponto.getPonto_id());
         return pontoDTO;
     }
 
     private Ponto mapToEntity(PontoDTO pontoDTO){
         Ponto ponto = new Ponto();
         ponto.setNome(pontoDTO.getNome());
-        ponto.setId(ponto.getId());
+        ponto.setPonto_id(pontoDTO.getPonto_id());
         return ponto;
     }
 }

@@ -1,7 +1,9 @@
 package com.belarek.SADPPBV.dto.pontos;
 
 import com.belarek.SADPPBV.dto.ResponseDTO;
+import lombok.Data;
 
+@Data
 public class GetPontoDTO {
     private PontoDTO ponto;
     private String message;

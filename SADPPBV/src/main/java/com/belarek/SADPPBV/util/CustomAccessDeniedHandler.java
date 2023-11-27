@@ -12,6 +12,7 @@ import java.io.IOException;
 
 public class CustomAccessDeniedHandler extends AccessDeniedHandlerImpl {
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private RegistrarLogsRequestResponse log;
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException)
@@ -20,7 +21,8 @@ public class CustomAccessDeniedHandler extends AccessDeniedHandlerImpl {
         response.setContentType("application/json");
         ResponseDTO responseDTO = new ResponseDTO("Não autorizado", false);
         String errorResponseJson = objectMapper.writeValueAsString(responseDTO);
-
         response.getWriter().write(errorResponseJson);
+        log.addLogHeadBody(request, null);
+        log.addLogResponse(errorResponseJson);
     }
 }

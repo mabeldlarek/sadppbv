@@ -1,5 +1,6 @@
 package com.belarek.SADPPBV.service.impl;
 
+import com.belarek.SADPPBV.dto.segmentos.PutSegmentoDTO;
 import com.belarek.SADPPBV.dto.segmentos.SegmentoDTO;
 import com.belarek.SADPPBV.entity.Segmento;
 import com.belarek.SADPPBV.repository.SegmentoRepository;
@@ -46,11 +47,11 @@ public class SegmentoServiceImpl implements SegmentoService {
     }
 
     @Override
-    public String updateSegmento(SegmentoDTO segmento, Long id) {
+    public String updateSegmento(PutSegmentoDTO segmento, Long id) {
         try {
             Segmento segmentoEncontrado = segmentoRepository.findById(id).get();
 
-            if (segmentoEncontrado == null) {
+            if (segmentoEncontrado != null) {
                 segmentoEncontrado.setDistancia(segmento.getDistancia());
                 segmentoEncontrado.setStatus(segmento.getStatus());
                 segmentoEncontrado.setPonto_inicial(segmento.getPonto_inicial());

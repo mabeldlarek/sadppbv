@@ -44,8 +44,8 @@ function Formulario({ usuarioParaEdicao }) {
         setMensagem(responseData.message);
         if (response.status === 200) {
           limparFormulario();
-        } else if (response.status === 401) {
-          console.error(responseData.message);
+        } else  {
+          setMensagem(responseData.message);
         }
       } else {
         console.error(`Erro na solicitação: ${response.status}`);

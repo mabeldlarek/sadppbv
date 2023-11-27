@@ -3,6 +3,7 @@ package com.belarek.SADPPBV.controller;
 import com.belarek.SADPPBV.dto.ResponseDTO;
 import com.belarek.SADPPBV.dto.segmentos.GetSegmentoDTO;
 import com.belarek.SADPPBV.dto.segmentos.ListSegmentoDTO;
+import com.belarek.SADPPBV.dto.segmentos.PutSegmentoDTO;
 import com.belarek.SADPPBV.dto.segmentos.SegmentoDTO;
 import com.belarek.SADPPBV.dto.usuarios.ListaUsuariosResponseDTO;
 import com.belarek.SADPPBV.service.SegmentoService;
@@ -63,9 +64,9 @@ public class SegmentoController {
         }
     }
 
-    @PutMapping("segmento/{id}")
-    public ResponseEntity<ResponseDTO> updateSegmento(@PathVariable Long id, @RequestBody SegmentoDTO SegmentoDTO) {
-        String resultado = segmentoService.updateSegmento(SegmentoDTO, id);
+    @PutMapping("segmentos/{id}")
+    public ResponseEntity<ResponseDTO> updateSegmento(@PathVariable Long id, @RequestBody PutSegmentoDTO putSegmentoDTO) {
+        String resultado = segmentoService.updateSegmento(putSegmentoDTO, id);
         if(resultado.equals("success")) {
             response.setMessage("Segmento atualizado com sucesso.");
             response.setSuccess(true);
@@ -77,7 +78,7 @@ public class SegmentoController {
         }
     }
 
-    @DeleteMapping("segmento/{id}")
+    @DeleteMapping("segmentos/{id}")
     public ResponseEntity<ResponseDTO> deleteSegmento(@PathVariable Long id) {
         String resultado = segmentoService.deleteSegmento(id);
         if(resultado.equals("success")) {

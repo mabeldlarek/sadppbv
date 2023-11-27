@@ -29,6 +29,8 @@ public class CustomAuthenticationEntryPoint extends BasicAuthenticationEntryPoin
         ResponseDTO responseDTO = new ResponseDTO("Não autenticado", false);
         String errorResponseJson = objectMapper.writeValueAsString(responseDTO);
         response.getWriter().write(errorResponseJson);
-        log.addLogResponse(response);
+        log.addLogHeadBody(request, null);
+        log.addLogResponse(errorResponseJson);
+
     }
 }

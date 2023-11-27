@@ -5,6 +5,8 @@ import { Dropdown, Nav, NavItem, Navbar, Container } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import ListaUsuarios from '../ListaUsuarios';
 import DetalhesConta from '../DetalhesConta';
+import ListaPontos from '../ListaPontos';
+import ListaSegmentos from '../ListaSegmentos';
 
 function NavigationAdm() {
   const navigate = useNavigate();
@@ -16,6 +18,9 @@ function NavigationAdm() {
   const [listaUsuariosVisivel, setListaUsuariosVisivel] = useState(false);
   const [visualizacaoVisivel, setVisualizacaoVisivel] = useState(false);
 
+  const [listaPontosVisivel, setListaPontosVisivel] = useState(false);
+  const [listaSegmentosVisivel, setSegmentosPontosVisivel] = useState(false);
+
   const headers = {
     'Authorization': `Bearer ${token}`,
     'Content-type': 'application/json',
@@ -25,11 +30,29 @@ function NavigationAdm() {
   const toggleListaUsuarios = () => {
       setVisualizacaoVisivel(false);
       setListaUsuariosVisivel(!listaUsuariosVisivel);
+      setListaPontosVisivel(false);
+      setSegmentosPontosVisivel(false);
   };
 
   const minhaConta = () => {
     setListaUsuariosVisivel(false)
     setVisualizacaoVisivel(true);
+    setListaPontosVisivel(false);
+    setSegmentosPontosVisivel(false);
+};
+
+const segmentos = () => {
+  setSegmentosPontosVisivel(true);
+  setListaUsuariosVisivel(false)
+  setVisualizacaoVisivel(false);
+  setListaPontosVisivel(false);
+};
+
+const pontos = () => {
+  setListaPontosVisivel(true);
+  setListaUsuariosVisivel(false)
+  setVisualizacaoVisivel(false);
+  setSegmentosPontosVisivel(false);
 };
 
   const realizarLogout = async () => {
@@ -93,6 +116,12 @@ function NavigationAdm() {
           <Nav.Link href="#" onClick={minhaConta}>Minha Conta</Nav.Link>
         </Nav.Item>
         <Nav.Item>
+          <Nav.Link href="#" onClick={segmentos}>Segmentos</Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link href="#" onClick={pontos}>Pontos</Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
         <Dropdown>
             <Dropdown.Toggle variant="light" id="dropdown-basic">
                 Usuarios
@@ -110,6 +139,8 @@ function NavigationAdm() {
       </Navbar>
       {listaUsuariosVisivel && <Dropdown.Item><ListaUsuarios/></Dropdown.Item>}
       {visualizacaoVisivel && <DetalhesConta />}
+      {listaPontosVisivel && <ListaPontos />}
+      {listaSegmentosVisivel && <ListaSegmentos />}
     <Outlet />
     </>
   );

@@ -33,8 +33,7 @@ const ListaUsuarios = () => {
 
           if (response.status === 200) {
             setUsuarios(responseData.usuarios);
-          } else if (response.status === 401) {
-            console.error(responseData.message);
+          } else  {
             setMensagem(responseData.message);
           }
         } else {

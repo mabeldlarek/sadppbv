@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
+@CrossOrigin(origins = "*")
+@RestController
 public class PontoController {
     private PontoService pontoService;
     private ResponseDTO response;
@@ -34,7 +36,7 @@ public class PontoController {
             return ResponseEntity.status(403).body(new ResponseDTO("Falha ao encontrar ponto", false));
     }
 
-    @PutMapping("ponto/{id}")
+    @PutMapping("pontos/{id}")
     public ResponseEntity<ResponseDTO> updatePonto(@PathVariable Long id, @RequestBody PontoPostPutDTO pontoDTO) {
         String resultado = pontoService.updatePonto(pontoDTO, id);
         if(resultado.equals("success")) {
@@ -48,7 +50,7 @@ public class PontoController {
         }
     }
 
-    @DeleteMapping("ponto/{id}")
+    @DeleteMapping("pontos/{id}")
     public ResponseEntity<ResponseDTO> deletePonto(@PathVariable Long id) {
         String resultado = pontoService.deletePonto(id);
         if(resultado.equals("success")) {
@@ -67,9 +69,11 @@ public class PontoController {
         List<PontoDTO> pontos = pontoService.listPontos();
         if(!pontos.isEmpty()) {
             return ResponseEntity.ok().body(new ListPontoDTO(pontos,new ResponseDTO("Pontos encontrados", true)));
-        }
-        return ResponseEntity.status(403).body(new ResponseDTO("Falha ao obter pontos", false));
+        } else if (pontos.isEmpty()) {
+            return ResponseEntity.status(403).body(new ResponseDTO("Não há pontos cadastrados", false));
+        } else
 
+        return ResponseEntity.status(403).body(new ResponseDTO("Falha ao obter pontos", false));
     }
 
     @PostMapping("pontos")

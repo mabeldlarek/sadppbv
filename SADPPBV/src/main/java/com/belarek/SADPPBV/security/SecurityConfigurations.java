@@ -39,7 +39,10 @@ public class SecurityConfigurations {
                 .csrf(crsf -> crsf.disable()).cors(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/segmentos").hasRole("ADMIN")
+                        .requestMatchers("/segmentos").permitAll()
+                        .requestMatchers("/segmentos/**").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/usuarios/**").hasRole("ADMIN")
+                        .requestMatchers("/pontos/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/usuarios/{registro}").authenticated()
                         .requestMatchers(HttpMethod.GET, "/usuarios/**").hasRole("ADMIN")
