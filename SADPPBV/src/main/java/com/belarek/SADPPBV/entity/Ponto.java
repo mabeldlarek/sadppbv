@@ -13,6 +13,6 @@ import lombok.NoArgsConstructor;
 public class Ponto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long ponto_id;
+    private Integer ponto_id;
     private String nome;
 }

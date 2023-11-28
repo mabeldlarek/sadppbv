@@ -31,9 +31,7 @@ const FormularioSegmentos = ({ segmentoParaEdicao }) => {
       const response = await fetch("http://" + localStorage.getItem('ip') + ":" + localStorage.getItem('porta') + "/segmentos", {
         method: 'POST',
         body: corpo,
-        headers: {
-         headers
-        },
+        headers: headers
       });
 
       if (response.status === 200 || response.status === 401 || response.status === 403) {
@@ -85,7 +83,7 @@ const FormularioSegmentos = ({ segmentoParaEdicao }) => {
         <div className="form-group col-md-6">
           <label htmlFor="pontoInicial">Ponto Inicial</label>
           <input
-            type="number"
+            type="text"
             value={segmento.ponto_inicial}
             onChange={capturarValor}
             name="ponto_inicial"
@@ -97,7 +95,7 @@ const FormularioSegmentos = ({ segmentoParaEdicao }) => {
         <div className="form-group col-md-6">
           <label htmlFor="pontoFinal">Ponto Final</label>
           <input
-            type="number"
+            type="text"
             value={segmento.ponto_final}
             onChange={capturarValor}
             name="ponto_final"

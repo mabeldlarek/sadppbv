@@ -6,8 +6,8 @@ import lombok.Data;
 public class SegmentoDTO {
     private long segmento_id;
     private double distancia;
-    private int ponto_inicial;
-    private int ponto_final;
+    private String ponto_inicial;
+    private String ponto_final;
     private int status;
     private String direcao;
 }

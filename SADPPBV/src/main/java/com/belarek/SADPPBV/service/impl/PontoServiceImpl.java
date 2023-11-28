@@ -43,7 +43,7 @@ public class PontoServiceImpl implements PontoService {
     }
 
     @Override
-    public PontoDTO findById(Long id) {
+    public PontoDTO findById(Integer id) {
         try {
             Ponto pontoEncontrado = pontoRepository.findById(id).orElse(null);
             if (pontoEncontrado != null) {
@@ -57,7 +57,7 @@ public class PontoServiceImpl implements PontoService {
     }
 
     @Override
-    public String updatePonto(PontoPostPutDTO ponto, Long id) {
+    public String updatePonto(PontoPostPutDTO ponto, Integer id) {
         try {
             Ponto pontoEncontrado = pontoRepository.findById(id).get();
             if (pontoEncontrado != null) {
@@ -73,7 +73,7 @@ public class PontoServiceImpl implements PontoService {
     }
 
     @Override
-    public String deletePonto(Long id) {
+    public String deletePonto(Integer id) {
         try {
             Ponto pontoEncontrado = pontoRepository.findById(id).get();
             if(pontoEncontrado!=null) {

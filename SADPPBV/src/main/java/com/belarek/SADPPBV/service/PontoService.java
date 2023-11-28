@@ -11,7 +11,7 @@ import java.util.List;
 public interface PontoService {
     String createPonto(PontoPostPutDTO Ponto);
     List<PontoDTO> listPontos();
-    PontoDTO findById(Long id);
-    String updatePonto(PontoPostPutDTO Ponto, Long id);
-    String deletePonto(Long id);
+    PontoDTO findById(Integer id);
+    String updatePonto(PontoPostPutDTO Ponto, Integer id);
+    String deletePonto(Integer id);
 }

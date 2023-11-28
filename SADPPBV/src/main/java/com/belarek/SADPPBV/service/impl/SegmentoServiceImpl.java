@@ -1,8 +1,11 @@
 package com.belarek.SADPPBV.service.impl;
 
+import com.belarek.SADPPBV.dto.segmentos.PostSegmentoDTO;
 import com.belarek.SADPPBV.dto.segmentos.PutSegmentoDTO;
 import com.belarek.SADPPBV.dto.segmentos.SegmentoDTO;
+import com.belarek.SADPPBV.entity.Ponto;
 import com.belarek.SADPPBV.entity.Segmento;
+import com.belarek.SADPPBV.repository.PontoRepository;
 import com.belarek.SADPPBV.repository.SegmentoRepository;
 import com.belarek.SADPPBV.service.SegmentoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,14 +18,16 @@ import java.util.stream.Collectors;
 @Service
 public class SegmentoServiceImpl implements SegmentoService {
     private SegmentoRepository segmentoRepository;
+    private PontoRepository pontoRepository;
 
     @Autowired
-    public SegmentoServiceImpl(SegmentoRepository segmentoRepository) {
+    public SegmentoServiceImpl(SegmentoRepository segmentoRepository, PontoRepository pontoRepository) {
+        this.pontoRepository = pontoRepository;
         this.segmentoRepository = segmentoRepository;
     }
 
     @Override
-    public String createSegmento(SegmentoDTO segmento) {
+    public String createSegmento(PostSegmentoDTO segmento) {
         try {
             Segmento novoSegmento = mapToEntity(segmento);
             segmentoRepository.save(novoSegmento);
@@ -52,10 +57,12 @@ public class SegmentoServiceImpl implements SegmentoService {
             Segmento segmentoEncontrado = segmentoRepository.findById(id).get();
 
             if (segmentoEncontrado != null) {
+                Ponto pontoInicial = pontoRepository.findById(Integer.valueOf(segmento.getPonto_inicial())).get();
+                Ponto pontoFinal = pontoRepository.findById(Integer.valueOf(segmento.getPonto_final())).get();;
                 segmentoEncontrado.setDistancia(segmento.getDistancia());
                 segmentoEncontrado.setStatus(segmento.getStatus());
-                segmentoEncontrado.setPonto_inicial(segmento.getPonto_inicial());
-                segmentoEncontrado.setPonto_final(segmento.getPonto_final());
+                segmentoEncontrado.setPonto_inicial(pontoInicial);
+                segmentoEncontrado.setPonto_final(pontoFinal);
                 segmentoEncontrado.setDirecao(segmento.getDirecao());
                 segmentoRepository.save(segmentoEncontrado);
                 return "success";
@@ -93,18 +100,21 @@ public class SegmentoServiceImpl implements SegmentoService {
 
     private SegmentoDTO mapToDTO(Segmento segmento){
         SegmentoDTO segmentoDTO = new SegmentoDTO();
-        segmentoDTO.setPonto_inicial(segmento.getPonto_inicial());
-        segmentoDTO.setPonto_final(segmento.getPonto_final());
+        segmentoDTO.setDistancia(segmento.getDistancia());
+        segmentoDTO.setPonto_inicial(segmento.getPonto_inicial().getNome());
+        segmentoDTO.setPonto_final(segmento.getPonto_final().getNome());
         segmentoDTO.setStatus(segmento.getStatus());
         segmentoDTO.setDirecao(segmento.getDirecao());
         segmentoDTO.setSegmento_id(segmento.getSegmento_id());
         return segmentoDTO;
     }
 
-    private Segmento mapToEntity(SegmentoDTO segmentoDTO){
+    private Segmento mapToEntity(PostSegmentoDTO segmentoDTO){
         Segmento segmento = new Segmento();
-        segmento.setPonto_inicial(segmentoDTO.getPonto_inicial());
-        segmento.setPonto_final(segmentoDTO.getPonto_final());
+        Ponto pontoInicial = pontoRepository.findById(Integer.valueOf(segmentoDTO.getPonto_inicial())).get();
+        Ponto pontoFinal = pontoRepository.findById(Integer.valueOf(segmentoDTO.getPonto_final())).get();;
+        segmento.setPonto_inicial(pontoInicial);
+        segmento.setPonto_final(pontoFinal);
         segmento.setStatus(segmentoDTO.getStatus());
         segmento.setDirecao(segmentoDTO.getDirecao());
         segmento.setDistancia(segmentoDTO.getDistancia());

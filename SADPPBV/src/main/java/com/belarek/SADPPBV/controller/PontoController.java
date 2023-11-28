@@ -28,7 +28,7 @@ public class PontoController {
     }
 
     @GetMapping("pontos/{id}")
-    public ResponseEntity<Object> listPontoById(@PathVariable Long id) {
+    public ResponseEntity<Object> listPontoById(@PathVariable Integer id) {
         PontoDTO resultado = pontoService.findById(id);
         if(resultado!=null){
             return ResponseEntity.ok().body(new GetPontoDTO(resultado, new ResponseDTO("Ponto encontrado com sucesso", true)));
@@ -37,7 +37,7 @@ public class PontoController {
     }
 
     @PutMapping("pontos/{id}")
-    public ResponseEntity<ResponseDTO> updatePonto(@PathVariable Long id, @RequestBody PontoPostPutDTO pontoDTO) {
+    public ResponseEntity<ResponseDTO> updatePonto(@PathVariable Integer id, @RequestBody PontoPostPutDTO pontoDTO) {
         String resultado = pontoService.updatePonto(pontoDTO, id);
         if(resultado.equals("success")) {
             response.setMessage("Ponto atualizado com sucesso.");
@@ -51,7 +51,7 @@ public class PontoController {
     }
 
     @DeleteMapping("pontos/{id}")
-    public ResponseEntity<ResponseDTO> deletePonto(@PathVariable Long id) {
+    public ResponseEntity<ResponseDTO> deletePonto(@PathVariable Integer id) {
         String resultado = pontoService.deletePonto(id);
         if(resultado.equals("success")) {
             response.setMessage("Ponto removido com sucesso.");

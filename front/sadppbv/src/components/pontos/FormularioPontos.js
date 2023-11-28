@@ -27,9 +27,7 @@ function FormularioPontos({ usuarioParaEdicao }) {
             const response = await fetch("http://" + localStorage.getItem('ip') + ":" + localStorage.getItem('porta') + "/pontos", {
                 method: 'POST',
                 body: corpo,
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: headers
             });
 
         if (response.status === 200 || response.status === 401 || response.status === 403) {

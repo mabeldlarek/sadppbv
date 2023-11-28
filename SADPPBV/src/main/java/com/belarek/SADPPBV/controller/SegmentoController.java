@@ -1,11 +1,7 @@
 package com.belarek.SADPPBV.controller;
 
 import com.belarek.SADPPBV.dto.ResponseDTO;
-import com.belarek.SADPPBV.dto.segmentos.GetSegmentoDTO;
-import com.belarek.SADPPBV.dto.segmentos.ListSegmentoDTO;
-import com.belarek.SADPPBV.dto.segmentos.PutSegmentoDTO;
-import com.belarek.SADPPBV.dto.segmentos.SegmentoDTO;
-import com.belarek.SADPPBV.dto.usuarios.ListaUsuariosResponseDTO;
+import com.belarek.SADPPBV.dto.segmentos.*;
 import com.belarek.SADPPBV.service.SegmentoService;
 import com.belarek.SADPPBV.util.RegistrarLogsRequestResponse;
 import jakarta.validation.Valid;
@@ -51,8 +47,8 @@ public class SegmentoController {
     }
 
     @PostMapping("segmentos")
-    public ResponseEntity<ResponseDTO> createSegmento(@RequestBody @Valid SegmentoDTO SegmentoDTO) {
-        String resultado = segmentoService.createSegmento(SegmentoDTO);
+    public ResponseEntity<ResponseDTO> createSegmento(@RequestBody @Valid PostSegmentoDTO postSegmentoDTO) {
+        String resultado = segmentoService.createSegmento(postSegmentoDTO);
         if(resultado.equals("success")){
             response.setMessage("Segmento criado com sucesso");
             response.setSuccess(true);
@@ -65,8 +61,8 @@ public class SegmentoController {
     }
 
     @PutMapping("segmentos/{id}")
-    public ResponseEntity<ResponseDTO> updateSegmento(@PathVariable Long id, @RequestBody PutSegmentoDTO putSegmentoDTO) {
-        String resultado = segmentoService.updateSegmento(putSegmentoDTO, id);
+    public ResponseEntity<ResponseDTO> updateSegmento(@PathVariable Long id, @RequestBody PutSegmentoDTO putPostSegmentoDTO) {
+        String resultado = segmentoService.updateSegmento(putPostSegmentoDTO, id);
         if(resultado.equals("success")) {
             response.setMessage("Segmento atualizado com sucesso.");
             response.setSuccess(true);

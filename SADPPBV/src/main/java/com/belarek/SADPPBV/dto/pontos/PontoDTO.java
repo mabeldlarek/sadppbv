@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PontoDTO {
-    private Long ponto_id;
+    private Integer ponto_id;
     private String nome;
 }
