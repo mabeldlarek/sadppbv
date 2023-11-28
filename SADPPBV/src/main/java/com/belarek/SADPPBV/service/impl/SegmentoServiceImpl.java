@@ -29,9 +29,15 @@ public class SegmentoServiceImpl implements SegmentoService {
     @Override
     public String createSegmento(PostSegmentoDTO segmento) {
         try {
-            Segmento novoSegmento = mapToEntity(segmento);
-            segmentoRepository.save(novoSegmento);
-            return "success";
+            if(isPontoExiste(segmento.getPonto_inicial(), segmento.getPonto_final())) {
+                if(getSegmentoExistente(segmento.getPonto_inicial(), segmento.getPonto_final())!=null) {
+                    return "Segmento com os pontos informados já existe.";
+                }
+                Segmento novoSegmento = mapToEntity(segmento);
+                segmentoRepository.save(novoSegmento);
+                return "success";
+            } else
+                return "Um ou mais pontos não existem.";
         } catch (Exception e) {
             return "erro";
         }
@@ -55,19 +61,26 @@ public class SegmentoServiceImpl implements SegmentoService {
     public String updateSegmento(PutSegmentoDTO segmento, Long id) {
         try {
             Segmento segmentoEncontrado = segmentoRepository.findById(id).get();
-
             if (segmentoEncontrado != null) {
-                Ponto pontoInicial = pontoRepository.findById(Integer.valueOf(segmento.getPonto_inicial())).get();
-                Ponto pontoFinal = pontoRepository.findById(Integer.valueOf(segmento.getPonto_final())).get();;
-                segmentoEncontrado.setDistancia(segmento.getDistancia());
-                segmentoEncontrado.setStatus(segmento.getStatus());
-                segmentoEncontrado.setPonto_inicial(pontoInicial);
-                segmentoEncontrado.setPonto_final(pontoFinal);
-                segmentoEncontrado.setDirecao(segmento.getDirecao());
-                segmentoRepository.save(segmentoEncontrado);
-                return "success";
+                if(isPontoExiste(segmento.getPonto_inicial(), segmento.getPonto_final())) {
+                    Segmento segmentoExistente = getSegmentoExistente(segmento.getPonto_inicial(), segmento.getPonto_final());
+                    if(segmentoExistente!=null && segmentoExistente.getSegmento_id()!= segmentoEncontrado.getSegmento_id()) {
+                        return "Segmento com os pontos informados já existe.";
+                    } else {
+                        Ponto pontoInicial = pontoRepository.findById(Integer.valueOf(segmento.getPonto_inicial())).get();
+                        Ponto pontoFinal = pontoRepository.findById(Integer.valueOf(segmento.getPonto_final())).get();
+                        segmentoEncontrado.setDistancia(segmento.getDistancia());
+                        segmentoEncontrado.setStatus(segmento.getStatus());
+                        segmentoEncontrado.setPonto_inicial(pontoInicial);
+                        segmentoEncontrado.setPonto_final(pontoFinal);
+                        segmentoEncontrado.setDirecao(segmento.getDirecao());
+                        segmentoRepository.save(segmentoEncontrado);
+                        return "success";
+                    }
+                } else
+                    return "Um ou mais pontos não existem.";
             } else {
-                return "erro";
+                return "Segmento não encontrado.";
             }
         } catch (Exception e) {
             return "erro";
@@ -120,5 +133,22 @@ public class SegmentoServiceImpl implements SegmentoService {
         segmento.setDistancia(segmentoDTO.getDistancia());
         segmento.setSegmento_id(segmentoDTO.getSegmento_id());
         return segmento;
+    }
+
+    private boolean isPontoExiste(Integer idPontoInicial, Integer idPontoFinal){
+        Ponto pontoInicial = pontoRepository.findById(idPontoInicial).get();
+        Ponto pontoFinal = pontoRepository.findById(idPontoFinal).get();
+
+        if(pontoInicial!=null && pontoFinal!=null){
+            return true;
+        } else
+            return false;
+    }
+
+    private Segmento getSegmentoExistente(Integer idPonIni, Integer idPonFinal){
+        Ponto pontoInicial = pontoRepository.findById(idPonIni).get();
+        Ponto pontoFinal = pontoRepository.findById(idPonFinal).get();
+        Segmento segmentoExistente = segmentoRepository.findCustomQueryByPontos(pontoInicial, pontoFinal);
+        return segmentoExistente;
     }
 }

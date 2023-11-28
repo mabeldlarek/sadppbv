@@ -6,4 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface PontoRepository extends JpaRepository<Ponto, Integer> {
+    Ponto findByNome(String nome);
 }

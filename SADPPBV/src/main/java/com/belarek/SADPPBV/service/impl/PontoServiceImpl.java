@@ -25,6 +25,9 @@ public class PontoServiceImpl implements PontoService {
     @Override
     public String createPonto(PontoPostPutDTO ponto) {
         try{
+            if(findByNome(ponto.getNome())!=null){
+                return "Ponto com nome : " + ponto.getNome() + " já existe.";
+            }
             pontoRepository.save(mapToEntity(ponto));
             return "success";
         } catch (Exception e) {
@@ -57,10 +60,20 @@ public class PontoServiceImpl implements PontoService {
     }
 
     @Override
+    public Ponto findByNome(String nome) {
+        Ponto pontoEncontrado = pontoRepository.findByNome(nome);
+        return pontoEncontrado;
+    }
+
+    @Override
     public String updatePonto(PontoPostPutDTO ponto, Integer id) {
         try {
             Ponto pontoEncontrado = pontoRepository.findById(id).get();
             if (pontoEncontrado != null) {
+                Ponto pontoExistente = findByNome(ponto.getNome());
+                if(pontoExistente!=null && pontoEncontrado.getPonto_id()!=pontoExistente.getPonto_id()){
+                    return "Ponto com nome : " + ponto.getNome() + " já existe.";
+                }
                 pontoEncontrado.setNome(ponto.getNome());
                 pontoRepository.save(pontoEncontrado);
                 return "success";
