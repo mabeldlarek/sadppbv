@@ -43,7 +43,7 @@ const EdicaoPontos = ({ ponto, onSaveEdicao }) => {
 
         if (response.status === 200) {
           salvar();
-        } else if (response.status === 401) {
+        } else {
           setMensagem(responseData.message);
         }
       } else {

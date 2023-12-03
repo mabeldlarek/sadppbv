@@ -83,7 +83,7 @@ const FormularioSegmentos = ({ segmentoParaEdicao }) => {
         <div className="form-group col-md-6">
           <label htmlFor="pontoInicial">Ponto Inicial</label>
           <input
-            type="text"
+            type="number"
             value={segmento.ponto_inicial}
             onChange={capturarValor}
             name="ponto_inicial"
@@ -95,7 +95,7 @@ const FormularioSegmentos = ({ segmentoParaEdicao }) => {
         <div className="form-group col-md-6">
           <label htmlFor="pontoFinal">Ponto Final</label>
           <input
-            type="text"
+            type="number"
             value={segmento.ponto_final}
             onChange={capturarValor}
             name="ponto_final"
@@ -140,6 +140,7 @@ const FormularioSegmentos = ({ segmentoParaEdicao }) => {
         />
       </div>
       <div> {mensagem} </div>
+     
     </form>
   );
 };

@@ -112,7 +112,7 @@ const ListaSegmentos = () => {
                 <li key={segmento.id} className="list-group-item d-flex justify-content-between align-items-center">
                   Ponto Inicial: {segmento.ponto_inicial} - Ponto Final :{segmento.ponto_final}
                   <div className="d-flex">
-                    <button className="btn btn-primary" onClick={() => editarSegmento(segmento)}>
+                    <button className="btn btn-primary" onClick={() => editarSegmento(segmento.segmento_id)}>
                       Editar
                     </button>
                     <button className="btn btn-danger" onClick={() => deletarSegmento(segmento.segmento_id)}>

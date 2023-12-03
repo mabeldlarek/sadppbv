@@ -32,8 +32,9 @@ public class PontoController {
         PontoDTO resultado = pontoService.findById(id);
         if(resultado!=null){
             return ResponseEntity.ok().body(new GetPontoDTO(resultado, new ResponseDTO("Ponto encontrado com sucesso", true)));
-        } else
+        } else {
             return ResponseEntity.status(403).body(new ResponseDTO("Falha ao encontrar ponto", false));
+        }
     }
 
     @PutMapping("pontos/{id}")

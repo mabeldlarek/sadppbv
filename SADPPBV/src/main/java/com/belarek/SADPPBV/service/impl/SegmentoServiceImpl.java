@@ -30,6 +30,8 @@ public class SegmentoServiceImpl implements SegmentoService {
     public String createSegmento(PostSegmentoDTO segmento) {
         try {
             if(isPontoExiste(segmento.getPonto_inicial(), segmento.getPonto_final())) {
+                if(pontosIguais(segmento.getPonto_inicial(), segmento.getPonto_final()))
+                    return "Pontos não podem ser iguais.";
                 if(getSegmentoExistente(segmento.getPonto_inicial(), segmento.getPonto_final())!=null) {
                     return "Segmento com os pontos informados já existe.";
                 }
@@ -62,6 +64,8 @@ public class SegmentoServiceImpl implements SegmentoService {
         try {
             Segmento segmentoEncontrado = segmentoRepository.findById(id).get();
             if (segmentoEncontrado != null) {
+                if(pontosIguais(segmento.getPonto_inicial(), segmento.getPonto_final()))
+                    return "Pontos não podem ser iguais.";
                 if(isPontoExiste(segmento.getPonto_inicial(), segmento.getPonto_final())) {
                     Segmento segmentoExistente = getSegmentoExistente(segmento.getPonto_inicial(), segmento.getPonto_final());
                     if(segmentoExistente!=null && segmentoExistente.getSegmento_id()!= segmentoEncontrado.getSegmento_id()) {
@@ -136,13 +140,17 @@ public class SegmentoServiceImpl implements SegmentoService {
     }
 
     private boolean isPontoExiste(Integer idPontoInicial, Integer idPontoFinal){
-        Ponto pontoInicial = pontoRepository.findById(idPontoInicial).get();
-        Ponto pontoFinal = pontoRepository.findById(idPontoFinal).get();
+        boolean pontoInicial = pontoRepository.findById(idPontoInicial).isPresent();
+        boolean pontoFinal = pontoRepository.findById(idPontoFinal).isPresent();
 
-        if(pontoInicial!=null && pontoFinal!=null){
+        if(pontoInicial && pontoFinal){
             return true;
         } else
             return false;
+    }
+
+    private boolean pontosIguais(Integer idPontoInicial, Integer idPontoFinal){
+        return idPontoInicial.equals(idPontoFinal);
     }
 
     private Segmento getSegmentoExistente(Integer idPonIni, Integer idPonFinal){

@@ -15,10 +15,10 @@ public class Segmento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long segmento_id;
     private double distancia;
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne()
     @JoinColumn(name = "ponto_inicial", referencedColumnName = "ponto_id")
     private Ponto ponto_inicial;
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne()
     @JoinColumn(name = "ponto_final", referencedColumnName = "ponto_id")
     private Ponto ponto_final;
     private int status;
