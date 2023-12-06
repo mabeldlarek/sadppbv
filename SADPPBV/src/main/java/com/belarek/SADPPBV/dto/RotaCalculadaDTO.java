@@ -1,10 +1,14 @@
 package com.belarek.SADPPBV.dto;
 
+import com.belarek.SADPPBV.dto.segmentos.SegmentoDTO;
+import lombok.Data;
+
+import java.util.List;
+
+@Data
 public class RotaCalculadaDTO {
-    private Long id;
-    private double distancia;
-    private int ponto_inicial;
-    private int ponto_final;
-    private int status;
-    private String direcao;
+
+  private List<SegmentoDTO> rota;
+  private String message;
+  private boolean sucess;
 }

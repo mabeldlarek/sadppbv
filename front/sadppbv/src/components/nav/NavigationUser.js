@@ -4,6 +4,7 @@ import { Outlet, Link } from "react-router-dom";
 import { Dropdown, Nav, NavItem, Navbar, Container } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import DetalhesConta from '../DetalhesConta';
+import DetalhesRota from '../DetalhesRota';
 
 function NavigationUser() {
 
@@ -15,6 +16,8 @@ function NavigationUser() {
     const token = localStorage.getItem('token');
   
     const [visualizacaoVisivel, setVisualizacaoVisivel] = useState(false);
+    const [visualizacaoRota, setVisualizacaoRota] = useState(false);
+
 
     const headers = {
       'Authorization': `Bearer ${token}`,
@@ -63,9 +66,15 @@ function NavigationUser() {
   }
 
     const minhaConta = () => {
+        setVisualizacaoRota(false);
         setVisualizacaoVisivel(true);
     };
   
+    const rota = () => {
+      setVisualizacaoVisivel(false);
+      setVisualizacaoRota(true);
+    };
+
     return (
       <>
       <Navbar className="custom-navbar">
@@ -86,11 +95,16 @@ function NavigationUser() {
           <Nav.Item>
             <Nav.Link href="#" onClick={minhaConta}>Minha conta</Nav.Link>
           </Nav.Item>
+          <Nav.Item>
+            <Nav.Link href="#" onClick={rota}>Calcular rota</Nav.Link>
+          </Nav.Item>
         </Nav>
         {mensagem}
           </Container>
         </Navbar>
-            {visualizacaoVisivel && <DetalhesConta />}      <Outlet />
+            {visualizacaoVisivel && <DetalhesConta />}   
+            {visualizacaoRota && <DetalhesRota />}
+               <Outlet />
       </>
     );
   }

@@ -10,6 +10,7 @@ import com.belarek.SADPPBV.repository.UserRepository;
 import com.belarek.SADPPBV.security.TokenService;
 import com.belarek.SADPPBV.service.AuthService;
 import com.belarek.SADPPBV.service.AuthTokenService;
+import com.belarek.SADPPBV.service.ConnectedUsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -31,6 +32,8 @@ public class AuthServiceImpl implements AuthService {
     private UserRepository userRepository;
     @Autowired
     private AuthTokenService authTokenService;
+    @Autowired
+    private ConnectedUsersService connectedUsers;
 
     @Override
     public Object login(LoginRequestDTO login) {
@@ -42,8 +45,10 @@ public class AuthServiceImpl implements AuthService {
             String token = autenticarUsuario(user, login.getSenha());
             if (token.isEmpty())
                 respostaLogin = getRespostaUsuarioNaoCredenciado();
-            else
+            else {
                 respostaLogin = new LoginResponseDTO(login.getRegistro(), token, "Login realizado com sucesso", true);
+                connectedUsers.addUser(user.getId(), user.getNome());
+            }
         }
 
         return  respostaLogin;
@@ -55,6 +60,7 @@ public class AuthServiceImpl implements AuthService {
         if(authToken!= null){
             authToken.setValido(false);
             authTokenService.changeIsValid(authToken);
+            connectedUsers.removeUser(authToken.getUserId());
             return new ResponseDTO("Logout realizado com sucesso", true);
         }
 
