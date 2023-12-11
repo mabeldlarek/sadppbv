@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import './App.css';
-import Formulario from './components/Formulario';
+import Formulario from './components/usuarios/Formulario';
 import {
   BrowserRouter as Router,
   Routes,

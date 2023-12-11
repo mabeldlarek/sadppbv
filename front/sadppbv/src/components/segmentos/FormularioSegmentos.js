@@ -54,7 +54,6 @@ const FormularioSegmentos = ({ segmentoParaEdicao }) => {
     const { name, value, type, checked } = e.target;
 
     const valor = type === 'checkbox' ? (checked ? 1 : 0) : value;
-    console.log(valor);
 
     setSegmento({ ...segmento, [e.target.name]: valor });
   };

@@ -118,7 +118,6 @@ const DetalhesRota = () => {
                     </div>
                     <div className="form-group col-md-6">
                         <label htmlFor="destino">Destino</label>
-                        {/* Substituir o input pelo combobox */}
                         <select
                             value={dadosRota.destino}
                             onChange={capturarValor}
@@ -128,7 +127,7 @@ const DetalhesRota = () => {
                             defaultValue={dadosRota.destino}
                         >
                             <option value="">Selecione o Destino</option>
-                            {/* Preencher as opções com os dados de pontos */}
+                           
                             {pontos.map((ponto) => (
                                 <option key={ponto.nome} value={ponto.nome}>
                                     {ponto.nome}
@@ -137,7 +136,7 @@ const DetalhesRota = () => {
                         </select>
                     </div>
                     <div className="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <input type="button" value="Obter" onClick={obterRota} className="btn btn-primary me-md-2" />
+                        <input type="button" value="Calcular" onClick={obterRota} className="btn btn-primary me-md-2" />
                     </div>
                 </div>
             </form>
@@ -150,10 +149,10 @@ const DetalhesRota = () => {
                         {rota.map((segmento, index) => (
                             <li key={segmento.segmento_id} className="list-group-item">
                                 <div className="row">
-                                    <div className="col-md-1"> {/* Coluna para a numeração */}
+                                    <div className="col-md-1"> 
                                         <span className="badge bg-primary rounded-pill">{index + 1}</span>
                                     </div>
-                                    <div className="col-md-11"> {/* Coluna para as demais informações */}
+                                    <div className="col-md-11"> 
                                         <div className="row">
                                             <div className="col-md-3">
                                                 <strong>Origem:</strong> {segmento.ponto_inicial}

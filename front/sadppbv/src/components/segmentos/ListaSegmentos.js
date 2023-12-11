@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import EdicaoPontos from './pontos/EdicaoPontos';
-import FormularioPontos from './pontos/FormularioPontos';
+import EdicaoSegmentos from './EdicaoSegmentos';
+import FormularioSegmentos from './FormularioSegmentos';
 
-const ListaPontos = () => {
-  const [pontos, setPontos] = useState([]);
+const ListaSegmentos = () => {
+  const [segmentos, setSegmentos] = useState([]);
   const [modo, setModo] = useState('lista');
-  const [pontoEditando, setPontoEditando] = useState(null);
-  const [pontoExcluindo, setPontoExcluindo] = useState(null);
+  const [segmentoEditando, setSegmentoEditando] = useState(null);
+  const [segmentoExcluindo, setSegmentoExcluindo] = useState(null);
   const ip = localStorage.getItem('ip');
   const porta = localStorage.getItem('porta');
   const token = localStorage.getItem('token');
@@ -20,9 +20,9 @@ const ListaPontos = () => {
 
   useEffect(() => {
     console.log('ENVIADO: ', headers);
-    const obterPontos = async () => {
+    const obterSegmentos = async () => {
       try {
-        const response = await fetch(`http://${ip}:${porta}/pontos`, {
+        const response = await fetch(`http://${ip}:${porta}/segmentos`, {
           method: 'GET',
           headers: headers
         });
@@ -31,7 +31,7 @@ const ListaPontos = () => {
           const responseData = await response.json();
           console.log('RECEBIDO: ', responseData);
           if (response.status === 200) {
-            setPontos(responseData.pontos);
+            setSegmentos(responseData.segmentos);
           } else {
             setMensagem(responseData.message);
           }
@@ -44,17 +44,17 @@ const ListaPontos = () => {
         }
       } catch (error) {
         console.error(error);
-        setMensagem("Erro ao obter pontos.");
+        setMensagem("Erro ao obter segmentos.");
         return null;
       }
     };
 
-    obterPontos();
-  }, [pontoEditando, pontoExcluindo]);
+    obterSegmentos();
+  }, [segmentoEditando, segmentoExcluindo]);
 
-  const deletarPonto = async (pontoId) => {
+  const deletarSegmento = async (segmentoId) => {
     try {
-      const response = await fetch(`http://${ip}:${porta}/pontos/${pontoId}`, {
+      const response = await fetch(`http://${ip}:${porta}/segmentos/${segmentoId}`, {
         method: 'DELETE',
         headers: headers
       });
@@ -63,10 +63,11 @@ const ListaPontos = () => {
         const responseData = await response.json();
 
         if (response.status === 200) {
-          setPontoExcluindo(pontoId);
+          setSegmentoExcluindo(segmentoId);
           setModo('lista');
           setMensagem(responseData.message);
-        } else  {
+        } else if (response.status === 401) {
+          console.error(responseData.message);
           setMensagem(responseData.message);
         }
       } else {
@@ -78,7 +79,7 @@ const ListaPontos = () => {
       }
     } catch (error) {
       console.error(error);
-      setMensagem("Erro ao deletar ponto.");
+      setMensagem("Erro ao deletar segmento.");
       return null;
     }
   };
@@ -87,36 +88,39 @@ const ListaPontos = () => {
     setModo('cadastro');
   };
 
-  const editarPonto = (ponto) => {
+  const editarSegmento = (segmento) => {
     setModo('edicao');
-    setPontoEditando(ponto);
+    setSegmentoEditando(segmento);
   };
 
-  const salvarCadastro = (pontoCadastrado) => {
+  const salvarCadastro = (segmentoCadastrado) => {
     setModo('lista');
   };
 
-  const salvarEdicao = (pontoEditado) => {
-    setPontoEditando(pontoEditado);
-    setPontoEditando(null);
+  const salvarEdicao = (segmentoEditado) => {
+    setSegmentoEditando(segmentoEditado);
+    setSegmentoEditando(null);
     setModo('lista');
+
   };
 
   return (
     <div>
       {modo === 'lista' && (
         <div>
-          <h2>Lista de Pontos</h2>
+          <h2>Lista de Segmentos</h2>
           <ul className="list-group">
-            {pontos.map((ponto) => (
-              <li key={ponto.id} className="list-group-item d-flex justify-content-between align-items-center">
-                Nome: {ponto.nome} 
-                
+            {segmentos.map((segmento) => (
+              <li key={segmento.id} className="list-group-item d-flex justify-content-between align-items-center">
+                Origem: {segmento.ponto_inicial} - Destino: {segmento.ponto_final}
                 <div className="d-flex">
-                  <button className="btn btn-primary" onClick={() => editarPonto(ponto)}>
+                  <div className="p-2">
+                  <strong> {segmento.status === 1 ? 'Ativo' : 'Bloqueado'}</strong>
+                  </div>
+                  <button className="btn btn-primary" onClick={() => editarSegmento(segmento.segmento_id)}>
                     Editar
                   </button>
-                  <button className="btn btn-danger" onClick={() => deletarPonto(ponto.ponto_id)}>
+                  <button className="btn btn-danger" onClick={() => deletarSegmento(segmento.segmento_id)}>
                     Deletar
                   </button>
                 </div>
@@ -124,22 +128,21 @@ const ListaPontos = () => {
             ))}
           </ul>
           <button className="btn btn-success" onClick={cadastrar}>
-            Cadastrar Novo Ponto
+            Cadastrar Novo Segmento
           </button>
           <div> {mensagem} </div>
         </div>
       )}
 
-      {modo === 'edicao' && pontoEditando && (
-        <EdicaoPontos ponto={pontoEditando} onSaveEdicao={salvarEdicao} />
+      {modo === 'edicao' && segmentoEditando && (
+        <EdicaoSegmentos segmento={segmentoEditando} onSaveEdicao={salvarEdicao} />
       )}
 
       {modo === 'cadastro' && (
-        <FormularioPontos onSaveCadastro={salvarCadastro} />
+        <FormularioSegmentos onSaveCadastro={salvarCadastro} />
       )}
     </div>
   );
 };
 
-export default ListaPontos;
-  
+export default ListaSegmentos;

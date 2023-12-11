@@ -73,7 +73,7 @@ return (
     <div className="form-row">
       <div className="form-group col-md-6">
         <label htmlFor="nome">Nome</label>
-        <input type="nome" value={obj.nome} onChange={capturarValor} name="nome" className="form-control" id="nome" placeholder="Nome" />
+        <input type="nome" pattern=".*" value={obj.nome} onChange={capturarValor} name="nome" className="form-control" id="nome" placeholder="Nome" />
       </div>
       <div className="form-group col-md-6">
         <label htmlFor="inputEmail4">Email</label>

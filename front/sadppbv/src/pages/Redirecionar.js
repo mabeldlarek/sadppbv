@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { redirect, useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import NavigationAdm from '../components/nav/NavigationAdm';
-import DetalhesConta from '../components/DetalhesConta';
+import DetalhesConta from '../components/usuarios/DetalhesConta';
 import NavigationUser from '../components/nav/NavigationUser';
 
 const Redirecionar = () => {

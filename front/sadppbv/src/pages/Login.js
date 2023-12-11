@@ -79,7 +79,7 @@ function Login() {
                                 <label htmlFor="registro">Registro</label>
                             </div>
                             <div className="form-floating">
-                                <input type="text" value={objLogin.senha} onChange={capturarValor} className="form-control form-control-sm" name="senha" id="senha" aria-label="Small" aria-describedby="inputGroup-sizing-sm" />
+                                <input type="password" value={objLogin.senha} onChange={capturarValor} className="form-control form-control-sm" name="senha" id="senha" aria-label="Small" aria-describedby="inputGroup-sizing-sm" />
                                 <label type="password" htmlFor="senha">Senha</label>
                             </div>
                             <button className="w-100 btn btn-lg btn-primary" type="button" onClick={realizarLogin}>Logar</button>

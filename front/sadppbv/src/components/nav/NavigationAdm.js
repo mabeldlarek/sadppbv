@@ -3,10 +3,10 @@ import React, { useState, useEffect } from 'react';
 import { Outlet, Link } from "react-router-dom";
 import { Dropdown, Nav, NavItem, Navbar, Container } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import ListaUsuarios from '../ListaUsuarios';
-import DetalhesConta from '../DetalhesConta';
-import ListaPontos from '../ListaPontos';
-import ListaSegmentos from '../ListaSegmentos';
+import ListaUsuarios from '../usuarios/ListaUsuarios';
+import DetalhesConta from '../usuarios/DetalhesConta';
+import ListaPontos from '../pontos/ListaPontos';
+import ListaSegmentos from '../segmentos/ListaSegmentos';
 import DetalhesRota from '../DetalhesRota';
 
 function NavigationAdm() {

@@ -34,4 +34,5 @@ public class ConnectedUsersService {
     public List<AuthToken> getValidTokens() {
         return authTokenRepository.findAllByIsValidoTrue();
     }
+
 }

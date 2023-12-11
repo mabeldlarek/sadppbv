@@ -43,7 +43,7 @@ public class RotaServiceImpl implements RotaService {
         }
         RotaCalculadaDTO rotaCalculadaDTO = new RotaCalculadaDTO();
         rotaCalculadaDTO.setRota(segmentosEncontrados);
-        rotaCalculadaDTO.setSucess(false);
+        rotaCalculadaDTO.setSucess(true);
         rotaCalculadaDTO.setMessage("Rota calculada com sucesso");
         return rotaCalculadaDTO;
     }
@@ -73,7 +73,7 @@ public class RotaServiceImpl implements RotaService {
 
             for (SegmentoDTO segmento : segmentos) {
                 if (segmento.getStatus() == 0) {
-                    continue; // Skip blocked segments
+                    continue;
                 }
 
                 if (segmento.getPonto_inicial().equals(currentNode.ponto)) {
@@ -98,7 +98,7 @@ public class RotaServiceImpl implements RotaService {
        try {
            if (!lista.isEmpty()) {
                SegmentoDTO ultimoSegmento = lista.get(lista.size() - 1);
-               ultimoSegmento.setDirecao("DESTINO");
+               ultimoSegmento.setDirecao(ultimoSegmento.getDirecao() + " É O SEU DESTINO");
            }
        } catch (Exception e){
            return null;
@@ -116,40 +116,5 @@ public class RotaServiceImpl implements RotaService {
 
         Collections.reverse(melhorRota);
     }
-
-   /* public List<SegmentoDTO> encontrarMelhorRota(String pontoInicial, String pontoFinal, List<SegmentoDTO> segmentos) {
-        List<SegmentoDTO> rotaAtual = new ArrayList<>();
-        boolean[] visitado = new boolean[segmentos.size()];
-
-        encontrarMelhorRotaAux(pontoInicial, pontoFinal, segmentos, visitado, rotaAtual, 0);
-
-        return melhorRota;
-    }
-
-    private void encontrarMelhorRotaAux(String pontoAtual, String pontoFinal, List<SegmentoDTO> segmentos, boolean[] visitado, List<SegmentoDTO> rotaAtual, double distanciaAtual) {
-        if (pontoAtual.equals(pontoFinal)) {
-            if (distanciaAtual < menorDistancia) {
-                menorDistancia = distanciaAtual;
-                melhorRota = new ArrayList<>(rotaAtual);
-            }
-            return;
-        }
-
-        for (int i = 0; i < segmentos.size(); i++) {
-            SegmentoDTO segmento = segmentos.get(i);
-
-            if (!visitado[i] && segmento.getPonto_inicial().equals(pontoAtual) && segmento.getStatus() != 1) {
-                visitado[i] = true;
-                rotaAtual.add(segmento);
-
-                encontrarMelhorRotaAux(segmento.getPonto_final(), pontoFinal, segmentos, visitado, rotaAtual, distanciaAtual + segmento.getDistancia());
-
-                visitado[i] = false;
-                rotaAtual.remove(rotaAtual.size() - 1);
-            }
-        }
-    }*/
-
-
 
 }

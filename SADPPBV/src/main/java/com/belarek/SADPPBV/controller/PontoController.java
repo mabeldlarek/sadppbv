@@ -6,6 +6,7 @@ import com.belarek.SADPPBV.dto.ResponseDTO;
 import com.belarek.SADPPBV.dto.pontos.PontoPostPutDTO;
 import com.belarek.SADPPBV.dto.pontos.GetPontoDTO;
 import com.belarek.SADPPBV.service.PontoService;
+import com.belarek.SADPPBV.util.RegistrarLogsRequestResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,8 @@ import java.util.List;
 public class PontoController {
     private PontoService pontoService;
     private ResponseDTO response;
+    @Autowired
+    private RegistrarLogsRequestResponse log;
 
     @Autowired
     public PontoController(PontoService pontoService) {
@@ -31,8 +34,10 @@ public class PontoController {
     public ResponseEntity<Object> listPontoById(@PathVariable Integer id) {
         PontoDTO resultado = pontoService.findById(id);
         if(resultado!=null){
+            log.addLogResponse(ResponseEntity.ok().body(new GetPontoDTO(resultado, new ResponseDTO("Ponto encontrado com sucesso", true))));
             return ResponseEntity.ok().body(new GetPontoDTO(resultado, new ResponseDTO("Ponto encontrado com sucesso", true)));
         } else {
+            log.addLogResponse(ResponseEntity.status(403).body(new ResponseDTO("Falha ao encontrar ponto", false)));
             return ResponseEntity.status(403).body(new ResponseDTO("Falha ao encontrar ponto", false));
         }
     }
@@ -43,10 +48,12 @@ public class PontoController {
         if(resultado.equals("success")) {
             response.setMessage("Ponto atualizado com sucesso.");
             response.setSuccess(true);
+            log.addLogResponse(ResponseEntity.ok().body(response));
             return ResponseEntity.ok().body(response);
         } else {
             response.setMessage("Erro: " + resultado);
             response.setSuccess(false);
+            log.addLogResponse(ResponseEntity.status(403).body(response));
             return ResponseEntity.status(403).body(response);
         }
     }
@@ -57,10 +64,12 @@ public class PontoController {
         if(resultado.equals("success")) {
             response.setMessage("Ponto removido com sucesso.");
             response.setSuccess(true);
+            log.addLogResponse(ResponseEntity.ok().body(response));
             return ResponseEntity.ok().body(response);
         } else {
             response.setMessage("Erro: " + resultado);
             response.setSuccess(false);
+            log.addLogResponse(ResponseEntity.status(403).body(response));
             return ResponseEntity.status(403).body(response);
         }
     }
@@ -69,11 +78,14 @@ public class PontoController {
     public ResponseEntity<Object> listpontos() {
         List<PontoDTO> pontos = pontoService.listPontos();
         if(!pontos.isEmpty()) {
+            log.addLogResponse(ResponseEntity.ok().body(new ListPontoDTO(pontos,new ResponseDTO("Pontos encontrados", true))));
             return ResponseEntity.ok().body(new ListPontoDTO(pontos,new ResponseDTO("Pontos encontrados", true)));
         } else if (pontos.isEmpty()) {
+            log.addLogResponse(ResponseEntity.status(403).body(new ResponseDTO("Não há pontos cadastrados", false)));
             return ResponseEntity.status(403).body(new ResponseDTO("Não há pontos cadastrados", false));
         } else
 
+            log.addLogResponse(ResponseEntity.status(403).body(new ResponseDTO("Falha ao obter pontos", false)));
         return ResponseEntity.status(403).body(new ResponseDTO("Falha ao obter pontos", false));
     }
 
@@ -83,10 +95,12 @@ public class PontoController {
         if(resultado.equals("success")){
             response.setMessage("Ponto criado com sucesso");
             response.setSuccess(true);
+            log.addLogResponse(ResponseEntity.ok().body(response));
             return ResponseEntity.ok().body(response);
         }else {
             response.setMessage("Erro: " + resultado);
             response.setSuccess(false);
+            log.addLogResponse(ResponseEntity.status(403).body(response));
             return ResponseEntity.status(403).body(response);
         }
     }

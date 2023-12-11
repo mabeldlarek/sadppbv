@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Outlet, Link } from "react-router-dom";
 import { Dropdown, Nav, NavItem, Navbar, Container } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import DetalhesConta from '../DetalhesConta';
+import DetalhesConta from '../usuarios/DetalhesConta';
 import DetalhesRota from '../DetalhesRota';
 
 function NavigationUser() {
