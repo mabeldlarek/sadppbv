@@ -7,6 +7,7 @@ import ListaUsuarios from '../ListaUsuarios';
 import DetalhesConta from '../DetalhesConta';
 import ListaPontos from '../ListaPontos';
 import ListaSegmentos from '../ListaSegmentos';
+import DetalhesRota from '../DetalhesRota';
 
 function NavigationAdm() {
   const navigate = useNavigate();
@@ -20,6 +21,8 @@ function NavigationAdm() {
 
   const [listaPontosVisivel, setListaPontosVisivel] = useState(false);
   const [listaSegmentosVisivel, setSegmentosPontosVisivel] = useState(false);
+  const [visualizacaoRota, setVisualizacaoRota] = useState(false);
+
 
   const headers = {
     'Authorization': `Bearer ${token}`,
@@ -27,11 +30,21 @@ function NavigationAdm() {
     'Accept': 'application/json',
   };
 
+  const rota = () => {
+    setListaUsuariosVisivel(false)
+    setVisualizacaoVisivel(false);
+    setListaPontosVisivel(false);
+    setSegmentosPontosVisivel(false);
+    setVisualizacaoRota(true);
+  };
+
   const toggleListaUsuarios = () => {
       setVisualizacaoVisivel(false);
       setListaUsuariosVisivel(!listaUsuariosVisivel);
       setListaPontosVisivel(false);
       setSegmentosPontosVisivel(false);
+      setVisualizacaoRota(false);
+
   };
 
   const minhaConta = () => {
@@ -39,6 +52,8 @@ function NavigationAdm() {
     setVisualizacaoVisivel(true);
     setListaPontosVisivel(false);
     setSegmentosPontosVisivel(false);
+    setVisualizacaoRota(false);
+
 };
 
 const segmentos = () => {
@@ -46,6 +61,8 @@ const segmentos = () => {
   setListaUsuariosVisivel(false)
   setVisualizacaoVisivel(false);
   setListaPontosVisivel(false);
+  setVisualizacaoRota(false);
+
 };
 
 const pontos = () => {
@@ -53,6 +70,7 @@ const pontos = () => {
   setListaUsuariosVisivel(false)
   setVisualizacaoVisivel(false);
   setSegmentosPontosVisivel(false);
+  setVisualizacaoRota(false);
 };
 
   const realizarLogout = async () => {
@@ -131,8 +149,12 @@ const pontos = () => {
                   Listar Usuários
                 </Dropdown.Item>
             </Dropdown.Menu>
+            
         </Dropdown>
         </Nav.Item>
+        <Nav.Item>
+            <Nav.Link href="#" onClick={rota}>Calcular rota</Nav.Link>
+          </Nav.Item>
       </Nav>
       {mensagem}
         </Container>
@@ -141,6 +163,7 @@ const pontos = () => {
       {visualizacaoVisivel && <DetalhesConta />}
       {listaPontosVisivel && <ListaPontos />}
       {listaSegmentosVisivel && <ListaSegmentos />}
+      {visualizacaoRota && <DetalhesRota />}
     <Outlet />
     </>
   );

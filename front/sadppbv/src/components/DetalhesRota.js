@@ -143,6 +143,9 @@ const DetalhesRota = () => {
             </form>
             <div>
                 <h2>Rota</h2>
+                {rota.length === 0 ? (
+                <p>A rota está vazia.</p>
+                ) : (
                 <ul className="list-group">
                     {rota.map((segmento, index) => (
                         <li key={segmento.segmento_id} className="list-group-item">
@@ -167,7 +170,7 @@ const DetalhesRota = () => {
                             </div>
                         </li>
                     ))}
-                </ul>
+                </ul>)}
                 <div> {mensagem} </div>
             </div>
         </div>

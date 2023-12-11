@@ -2,6 +2,7 @@ import Logo from '../../resources/img/logo.png'
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Outlet, Link } from "react-router-dom";
+import DetalhesRota from '../DetalhesRota';
 
 
 function NavigationLogged() {

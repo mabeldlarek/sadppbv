@@ -10,7 +10,6 @@ import com.belarek.SADPPBV.repository.UserRepository;
 import com.belarek.SADPPBV.security.TokenService;
 import com.belarek.SADPPBV.service.AuthService;
 import com.belarek.SADPPBV.service.AuthTokenService;
-import com.belarek.SADPPBV.service.ConnectedUsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.AuthenticationManager;

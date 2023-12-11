@@ -5,7 +5,6 @@ import com.belarek.SADPPBV.dto.auth.LoginResponseDTO;
 import com.belarek.SADPPBV.dto.ResponseDTO;
 import com.belarek.SADPPBV.security.TokenService;
 import com.belarek.SADPPBV.service.AuthService;
-import com.belarek.SADPPBV.service.ConnectedUsersService;
 import com.belarek.SADPPBV.service.UserService;
 import com.belarek.SADPPBV.util.RegistrarLogsRequestResponse;
 import jakarta.servlet.http.HttpServletRequest;
@@ -68,7 +67,7 @@ public class AuthController {
 
    @PostMapping("/logout")
     public ResponseEntity<Object> logout(HttpServletRequest request){
-       log.addLogHeadBody(request,null);
+     log.addLogHeadBody(request,null);
        String token = extractTokenFromRequest(request);
         ResponseDTO response = null;
         if (token != null) {

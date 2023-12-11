@@ -102,6 +102,8 @@ const ListaSegmentos = () => {
       setSegmentoEditando(null);
     };
   
+
+
     return (
       <div>
         {modo === 'lista' && (
@@ -110,7 +112,7 @@ const ListaSegmentos = () => {
             <ul className="list-group">
               {segmentos.map((segmento) => (
                 <li key={segmento.id} className="list-group-item d-flex justify-content-between align-items-center">
-                  Ponto Inicial: {segmento.ponto_inicial} - Ponto Final :{segmento.ponto_final}
+                 Origem: {segmento.ponto_inicial} - Destino: {segmento.ponto_final}
                   <div className="d-flex">
                     <button className="btn btn-primary" onClick={() => editarSegmento(segmento.segmento_id)}>
                       Editar

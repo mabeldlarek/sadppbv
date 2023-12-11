@@ -1,14 +1,12 @@
 package com.belarek.SADPPBV.controller;
 
 import com.belarek.SADPPBV.entity.AuthToken;
-import com.belarek.SADPPBV.service.ConnectedUsersService;
+import com.belarek.SADPPBV.service.impl.ConnectedUsersService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
 import java.util.Map;
