@@ -144,33 +144,36 @@ const DetalhesRota = () => {
             <div>
                 <h2>Rota</h2>
                 {rota.length === 0 ? (
-                <p>A rota está vazia.</p>
+                    <p>A rota está vazia.</p>
                 ) : (
-                <ul className="list-group">
-                    {rota.map((segmento, index) => (
-                        <li key={segmento.segmento_id} className="list-group-item">
-                            <div className="row">
-                                <div className="col-md-3">
-                                    <strong>Origem:</strong> {segmento.ponto_inicial}
+                    <ul className="list-group">
+                        {rota.map((segmento, index) => (
+                            <li key={segmento.segmento_id} className="list-group-item">
+                                <div className="row">
+                                    <div className="col-md-1"> {/* Coluna para a numeração */}
+                                        <span className="badge bg-primary rounded-pill">{index + 1}</span>
+                                    </div>
+                                    <div className="col-md-11"> {/* Coluna para as demais informações */}
+                                        <div className="row">
+                                            <div className="col-md-3">
+                                                <strong>Origem:</strong> {segmento.ponto_inicial}
+                                            </div>
+                                            <div className="col-md-3">
+                                                <strong>Destino:</strong> {segmento.ponto_final}
+                                            </div>
+                                            <div className="col-md-3">
+                                                <strong>Distância:</strong> {segmento.distancia}
+                                            </div>
+                                            <div className="col-md-3">
+                                                <strong>Direção:</strong> {segmento.direcao}
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className="col-md-3">
-                                    <strong>Destino:</strong> {segmento.ponto_final}
-                                </div>
-                                <div className="col-md-3">
-                                    <strong>Direção:</strong> {segmento.direcao}
-                                </div>
-                                <div className="col-md-3">
-                                    <strong>Distância:</strong> {segmento.distancia}
-                                </div>
-                            </div>
-                            <div className="row">
-                                <div className="col-md-12 text-end">
-                                    <span className="badge bg-primary rounded-pill">{index + 1}</span>
-                                </div>
-                            </div>
-                        </li>
-                    ))}
-                </ul>)}
+                            </li>
+
+                        ))}
+                    </ul>)}
                 <div> {mensagem} </div>
             </div>
         </div>

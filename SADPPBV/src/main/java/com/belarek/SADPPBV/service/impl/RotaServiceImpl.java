@@ -32,7 +32,9 @@ public class RotaServiceImpl implements RotaService {
     @Override
     public List<SegmentoDTO> calcularRota(String pontoInicial, String pontoFinal) {
         segmentos = getSegmentos();
-        return encontrarMelhorRota(pontoInicial, pontoFinal, segmentos);
+        List<SegmentoDTO> listaSeg = encontrarMelhorRota(pontoInicial, pontoFinal, segmentos);
+        List<SegmentoDTO> listaSegModif = adicionarInfoDestino(listaSeg);
+        return listaSegModif;
     }
 
     private RotaCalculadaDTO mapToDTO(List<SegmentoDTO> segmentosEncontrados) {
@@ -92,6 +94,17 @@ public class RotaServiceImpl implements RotaService {
         return melhorRota;
     }
 
+    private List<SegmentoDTO> adicionarInfoDestino(List<SegmentoDTO> lista){
+       try {
+           if (!lista.isEmpty()) {
+               SegmentoDTO ultimoSegmento = lista.get(lista.size() - 1);
+               ultimoSegmento.setDirecao("DESTINO");
+           }
+       } catch (Exception e){
+           return null;
+       }
+        return lista;
+    }
     private void reconstruirMelhorRota(String pontoFinal, Map<String, SegmentoDTO> predecessores) {
         melhorRota.clear();
         SegmentoDTO segmentoAtual = predecessores.get(pontoFinal);
